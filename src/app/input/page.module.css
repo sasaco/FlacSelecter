@@ -15,10 +15,29 @@
   font-weight: bold;
 }
 
-.formGroup input {
+.formGroup input[type="text"],
+.formGroup input[type="number"] {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.radioGroup {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.radioLabel.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .submitButton {
@@ -34,4 +53,24 @@
 
 .submitButton:hover {
   background-color: #0051cc;
+}
+
+.unit {
+  margin-left: 0.5rem;
+  color: #666;
+}
+
+.liner {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.marginLeft {
+  margin-left: 1rem;
+}
+
+.disabledText {
+  color: #666;
+  font-style: italic;
 }
