@@ -27,12 +27,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <header>
+        <div className={styles.header}>
           <nav className={styles.headerNav}>
-            <Link href="/input" className={styles.navLink}>条件設定</Link>
+            <Link href="/" className={styles.navLink}>条件設定</Link>
             <Link href="/output" className={styles.navLink}>結果</Link>
           </nav>
-        </header>
+        </div>
         {children}
       </body>
     </html>
