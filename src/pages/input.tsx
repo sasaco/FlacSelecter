@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 
 // Import styles
 import styles from '@/styles/Input.module.css';
@@ -82,6 +83,29 @@ const uchimakiHokyoList = [
 ];
 
 const InputPage: NextPage = () => {
+  const router = useRouter();
+
+  const goToOutput = () => {
+    router.push({
+      pathname: '/output',
+      query: {
+        tunnelKeizyo: formData.tunnelKeizyo,
+        fukukouMakiatsu: formData.fukukouMakiatsu,
+        invert: formData.invert,
+        haimenKudo: formData.haimenKudo,
+        henkeiMode: formData.henkeiMode,
+        jiyamaKyodo: formData.jiyamaKyodo,
+        naikuHeniSokudo: formData.naikuHeniSokudo,
+        uragomeChunyuko: formData.uragomeChunyuko,
+        lockBoltKou: formData.lockBoltKou,
+        lockBoltLength: formData.lockBoltLength,
+        downwardLockBoltKou: formData.downwardLockBoltKou,
+        downwardLockBoltLength: formData.downwardLockBoltLength,
+        uchimakiHokyo: formData.uchimakiHokyo,
+        MonitoringData: formData.MonitoringData
+      }
+    });
+  };
   // Form state
   const [formData, setFormData] = useState<InputData>({
     tunnelKeizyo: 1,
@@ -513,6 +537,11 @@ const InputPage: NextPage = () => {
             )}
           </fieldset>
         </div>
+      </div>
+      <div className={styles.buttonContainer}>
+        <button onClick={goToOutput} className={styles.nextButton}>
+          次へ (Go to Output)
+        </button>
       </div>
     </div>
   );

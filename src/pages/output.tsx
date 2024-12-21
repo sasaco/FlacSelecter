@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import styles from '@/styles/Output.module.css';
@@ -40,6 +40,48 @@ const OutputPage: NextPage = () => {
     uchimakiHokyo: 0,
     MonitoringData: ''
   });
+
+  // Initialize form data from query parameters
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const {
+      tunnelKeizyo,
+      fukukouMakiatsu,
+      invert,
+      haimenKudo,
+      henkeiMode,
+      jiyamaKyodo,
+      naikuHeniSokudo,
+      uragomeChunyuko,
+      lockBoltKou,
+      lockBoltLength,
+      downwardLockBoltKou,
+      downwardLockBoltLength,
+      uchimakiHokyo,
+      MonitoringData
+    } = router.query;
+
+    if (tunnelKeizyo) {
+      setFormData(prev => ({
+        ...prev,
+        tunnelKeizyo: Number(tunnelKeizyo),
+        fukukouMakiatsu: Number(fukukouMakiatsu),
+        invert: Number(invert),
+        haimenKudo: Number(haimenKudo),
+        henkeiMode: Number(henkeiMode),
+        jiyamaKyodo: Number(jiyamaKyodo),
+        naikuHeniSokudo: Number(naikuHeniSokudo),
+        uragomeChunyuko: Number(uragomeChunyuko),
+        lockBoltKou: Number(lockBoltKou),
+        lockBoltLength: Number(lockBoltLength),
+        downwardLockBoltKou: Number(downwardLockBoltKou),
+        downwardLockBoltLength: Number(downwardLockBoltLength),
+        uchimakiHokyo: Number(uchimakiHokyo),
+        MonitoringData: MonitoringData as string || ''
+      }));
+    }
+  }, [router.isReady, router.query]);
 
   const [outputState, setOutputState] = React.useState({
     inputString1: '',
