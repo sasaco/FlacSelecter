@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import styles from '../styles/output.module.css';
+import styles from '@/components/styles/output.module.css';
 
 interface ImageComparisonProps {
   beforeImage: string;

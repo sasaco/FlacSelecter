@@ -4,7 +4,7 @@ import React from 'react';
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { getCaseStrings, calculateEffectiveness, loadCaseData } from '../../utils/dataParser';
-import styles from '../../components/styles/output.module.css';
+import styles from '@/components/styles/output.module.css';
 import type { InputData } from '../../utils/dataParser';
 import { formatInputString1, formatInputString2, formatInputString3 } from '../../utils/formatters/inputFormatters';
 import { logError, getUserErrorMessage } from '../../utils/errorHandling';
