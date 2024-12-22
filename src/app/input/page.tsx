@@ -315,19 +315,49 @@ export default function Page() {
               <legend>ロックボルト工（下向き）</legend>
               {uiState.downwardLockBoltEnable ? (
                 <div className="space-y-3">
-                  {downwardLockBoltKouList.map((item, index) => (
-                    <label key={item.id} className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-50">
-                      <input
-                        type="radio"
-                        name="downwardLockBoltKou"
-                        value={item.id}
-                        checked={formData.downwardLockBoltKou === item.id}
-                        onChange={(e) => handleInputChange('downwardLockBoltKou', Number(e.target.value))}
-                        className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                      />
-                      <span className="text-text-dark">{item.title}</span>
-                    </label>
-                  ))}
+                  {/* Quantity Options */}
+                  <div className="space-y-2">
+                    {downwardLockBoltKouList.map((item, index) => (
+                      <label key={item.id} className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-50">
+                        <input
+                          type="radio"
+                          name="downwardLockBoltKou"
+                          value={item.id}
+                          checked={formData.downwardLockBoltKou === item.id}
+                          onChange={(e) => handleInputChange('downwardLockBoltKou', Number(e.target.value))}
+                          className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                        <span className="text-gray-700">{item.title}</span>
+                      </label>
+                    ))}
+                  </div>
+
+                  {/* Length Options - Only show when a non-zero quantity is selected */}
+                  {formData.downwardLockBoltKou !== 0 && (
+                    <div className="ml-6 space-y-2 border-l-2 border-gray-200 pl-4">
+                      {downwardLockBoltLengthList.map((item, index) => (
+                        <label
+                          key={item.id}
+                          className={`flex items-center space-x-3 p-2 ${
+                            uiState.downwardLockBoltLengthStyle !== 'Enable'
+                              ? 'opacity-50 cursor-not-allowed bg-gray-100'
+                              : 'cursor-pointer hover:bg-gray-50'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="downwardLockBoltLength"
+                            value={item.id}
+                            checked={formData.downwardLockBoltLength === item.id}
+                            onChange={(e) => handleInputChange('downwardLockBoltLength', Number(e.target.value))}
+                            disabled={uiState.downwardLockBoltLengthStyle !== 'Enable'}
+                            className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                          />
+                          <span className="text-gray-700">{item.title}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p className="text-disabled-gray text-sm p-2">選択できません</p>
