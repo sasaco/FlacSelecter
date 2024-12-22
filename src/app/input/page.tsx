@@ -43,22 +43,10 @@ const lockBoltKouList = [
   { id: 12, title: '12本' },
 ];
 
-const lockBoltLengthList = [
-  { id: 3, title: '3m' },
-  { id: 6, title: '6m' },
-  { id: 4, title: '4m' },
-  { id: 8, title: '8m' },
-];
-
 const downwardLockBoltKouList = [
   { id: 0, title: 'なし' },
   { id: 4, title: '4本' },
   { id: 6, title: '6本' }
-];
-
-const downwardLockBoltLengthList = [
-  { id: 4, title: '4m' },
-  { id: 8, title: '8m' }
 ];
 
 const uchimakiHokyoList = [
