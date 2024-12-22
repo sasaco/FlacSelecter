@@ -30,7 +30,7 @@ function parseCSVRow(row: string[]): CSVRow {
 }
 
 // Types for our data structures
-interface InputData {
+export interface InputData {
   tunnelKeizyo: number;
   fukukouMakiatsu: number;
   invert: number;
