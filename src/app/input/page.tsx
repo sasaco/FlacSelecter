@@ -292,86 +292,88 @@ export default function Page() {
 
       <div className="space-y-4">
         <div className="bg-gray-50 p-4">
-          {/* Back Cavity */}
-          <fieldset className="border border-gray-200 rounded p-4">
-            <legend className="mb-3 font-medium text-sm text-gray-800">背面空洞の有無</legend>
-            <div className="space-y-3">
-              {haimenKudoList.map((item, index) => (
-                <label key={item.id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
-                  <input
-                    type="radio"
-                    name="haimenKudo"
-                    value={item.id}
-                    checked={formData.haimenKudo === item.id}
-                    onChange={(e) => handleInputChange('haimenKudo', Number(e.target.value))}
-                    className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
-                  />
-                  <span className="text-text-dark">{item.title}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Back Cavity */}
+            <fieldset className="border border-gray-200 rounded p-4">
+              <legend className="mb-3 font-medium text-sm text-gray-800">背面空洞の有無</legend>
+              <div className="space-y-3">
+                {haimenKudoList.map((item, index) => (
+                  <label key={item.id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
+                    <input
+                      type="radio"
+                      name="haimenKudo"
+                      value={item.id}
+                      checked={formData.haimenKudo === item.id}
+                      onChange={(e) => handleInputChange('haimenKudo', Number(e.target.value))}
+                      className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
+                    />
+                    <span className="text-text-dark">{item.title}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
 
-          {/* Deformation Mode */}
-          <fieldset className="border border-gray-200 rounded p-4 mt-4">
-            <legend className="mb-3 font-medium text-sm text-gray-800">変形モード</legend>
-            <div className="space-y-3">
-              {henkeiModeList.map((item, index) => (
-                <label
-                  key={item.id}
-                  className={`flex items-center space-x-3 p-2 ${
-                    uiState.henkeiModeStyle[index] !== 'Enable' 
-                      ? 'opacity-40 cursor-not-allowed bg-gray-50' 
-                      : 'cursor-pointer hover:bg-gray-50'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="henkeiMode"
-                    value={item.id}
-                    checked={formData.henkeiMode === item.id}
-                    onChange={(e) => handleInputChange('henkeiMode', Number(e.target.value))}
-                    disabled={uiState.henkeiModeStyle[index] !== 'Enable'}
-                    className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light disabled:opacity-50"
-                  />
-                  <span className="text-text-dark">{item.title}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+            {/* Deformation Mode */}
+            <fieldset className="border border-gray-200 rounded p-4">
+              <legend className="mb-3 font-medium text-sm text-gray-800">変形モード</legend>
+              <div className="space-y-3">
+                {henkeiModeList.map((item, index) => (
+                  <label
+                    key={item.id}
+                    className={`flex items-center space-x-3 p-2 ${
+                      uiState.henkeiModeStyle[index] !== 'Enable' 
+                        ? 'opacity-40 cursor-not-allowed bg-gray-50' 
+                        : 'cursor-pointer hover:bg-gray-50'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="henkeiMode"
+                      value={item.id}
+                      checked={formData.henkeiMode === item.id}
+                      onChange={(e) => handleInputChange('henkeiMode', Number(e.target.value))}
+                      disabled={uiState.henkeiModeStyle[index] !== 'Enable'}
+                      className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light disabled:opacity-50"
+                    />
+                    <span className="text-text-dark">{item.title}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
 
-          {/* Ground Strength */}
-          <fieldset className="border border-gray-200 rounded p-4 mt-4">
-            <legend className="mb-3 font-medium text-sm text-gray-800">地山強度</legend>
-            <div className="flex items-center space-x-3">
-              <input
-                type="number"
-                className="form-input w-32 rounded-md border-form-gray-light focus:border-gitlab-green-light focus:ring-2 focus:ring-gitlab-green-light"
-                value={formData.jiyamaKyodo}
-                onChange={(e) => handleInputChange('jiyamaKyodo', Number(e.target.value))}
-                min={2}
-                max={8}
-              />
-              <span className="text-text-dark">MPa</span>
-            </div>
-          </fieldset>
+            {/* Ground Strength */}
+            <fieldset className="border border-gray-200 rounded p-4">
+              <legend className="mb-3 font-medium text-sm text-gray-800">地山強度</legend>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="number"
+                  className="form-input w-32 rounded-md border-form-gray-light focus:border-gitlab-green-light focus:ring-2 focus:ring-gitlab-green-light"
+                  value={formData.jiyamaKyodo}
+                  onChange={(e) => handleInputChange('jiyamaKyodo', Number(e.target.value))}
+                  min={2}
+                  max={8}
+                />
+                <span className="text-text-dark">MPa</span>
+              </div>
+            </fieldset>
 
-          {/* Inner Displacement Speed */}
-          <fieldset className="border border-gray-200 rounded p-4 mt-4">
-            <legend className="mb-3 font-medium text-sm text-gray-800">内空変位速度, 盤ぶくれ速度</legend>
-            <div className="flex items-center space-x-3">
-              <input
-                type="number"
-                className="form-input w-40 rounded-md border-form-gray-light focus:border-gitlab-green-light focus:ring-2 focus:ring-gitlab-green-light"
-                value={formData.naikuHeniSokudo}
-                onChange={(e) => handleInputChange('naikuHeniSokudo', Number(e.target.value))}
-              />
-              <span className="text-text-dark">mm/年</span>
-            </div>
-            {formData.MonitoringData && (
-              <pre className="mt-4 p-3 bg-gray-50 rounded-md text-sm text-text-dark">{formData.MonitoringData}</pre>
-            )}
-          </fieldset>
+            {/* Inner Displacement Speed */}
+            <fieldset className="border border-gray-200 rounded p-4">
+              <legend className="mb-3 font-medium text-sm text-gray-800">内空変位速度, 盤ぶくれ速度</legend>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="number"
+                  className="form-input w-40 rounded-md border-form-gray-light focus:border-gitlab-green-light focus:ring-2 focus:ring-gitlab-green-light"
+                  value={formData.naikuHeniSokudo}
+                  onChange={(e) => handleInputChange('naikuHeniSokudo', Number(e.target.value))}
+                />
+                <span className="text-text-dark">mm/年</span>
+              </div>
+              {formData.MonitoringData && (
+                <pre className="mt-4 p-3 bg-gray-50 rounded-md text-sm text-text-dark">{formData.MonitoringData}</pre>
+              )}
+            </fieldset>
+          </div>
         </div>
       </div>
 
@@ -382,39 +384,39 @@ export default function Page() {
 
       <div className="space-y-4">
         <div className="bg-gray-50 p-4">
-          {/* Back Filling Injection */}
-          <fieldset className="border border-gray-200 rounded p-4">
-            <legend className="mb-3 font-medium text-sm text-gray-800">裏込注入工</legend>
-            <div className="space-y-3">
-              {uragomeChunyukoList.map((item, index) => (
-                <label
-                  key={item.id}
-                  className={`flex items-center space-x-3 p-2 ${
-                    uiState.uragomeChunyukoStyle[index] !== 'Enable' 
-                      ? 'opacity-40 cursor-not-allowed bg-gray-50' 
-                      : 'cursor-pointer hover:bg-gray-50'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="uragomeChunyuko"
-                    value={item.id}
-                    checked={formData.uragomeChunyuko === item.id}
-                    onChange={(e) => handleInputChange('uragomeChunyuko', Number(e.target.value))}
-                    disabled={uiState.uragomeChunyukoStyle[index] !== 'Enable'}
-                    className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light disabled:opacity-50"
-                  />
-                  <span className="text-text-dark">{item.title}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Back Filling Injection */}
+            <fieldset className="border border-gray-200 rounded p-4">
+              <legend className="mb-3 font-medium text-sm text-gray-800">裏込注入工</legend>
+              <div className="space-y-3">
+                {uragomeChunyukoList.map((item, index) => (
+                  <label
+                    key={item.id}
+                    className={`flex items-center space-x-3 p-2 ${
+                      uiState.uragomeChunyukoStyle[index] !== 'Enable' 
+                        ? 'opacity-40 cursor-not-allowed bg-gray-50' 
+                        : 'cursor-pointer hover:bg-gray-50'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="uragomeChunyuko"
+                      value={item.id}
+                      checked={formData.uragomeChunyuko === item.id}
+                      onChange={(e) => handleInputChange('uragomeChunyuko', Number(e.target.value))}
+                      disabled={uiState.uragomeChunyukoStyle[index] !== 'Enable'}
+                      className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light disabled:opacity-50"
+                    />
+                    <span className="text-text-dark">{item.title}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
 
-          {/* Rock Bolt Work */}
-          <fieldset className="mb-6">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">ロックボルト工</legend>
-            {!uiState.henkeiMode4Flag ? (
-              <div className="grid grid-cols-2 gap-12">
+            {/* Rock Bolt Work */}
+            <fieldset className="border border-gray-200 rounded p-4">
+              <legend className="mb-3 font-medium text-sm text-gray-800">ロックボルト工</legend>
+              {!uiState.henkeiMode4Flag ? (
                 <div className="space-y-3">
                   {lockBoltKouList.map((item, index) => (
                     <label key={item.id} className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-50">
@@ -430,40 +432,15 @@ export default function Page() {
                     </label>
                   ))}
                 </div>
-                <div className="space-y-3">
-                  {lockBoltLengthList.map((item, index) => (
-                    <label
-                      key={item.id}
-                      className={`flex items-center space-x-3 p-2 ${
-                        uiState.lockBoltLengthStyle[index] !== 'Enable' 
-                          ? 'opacity-40 cursor-not-allowed bg-gray-50' 
-                          : 'cursor-pointer hover:bg-gray-50'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="lockBoltLength"
-                        value={item.id}
-                        checked={formData.lockBoltLength === item.id}
-                        onChange={(e) => handleInputChange('lockBoltLength', Number(e.target.value))}
-                        disabled={uiState.lockBoltLengthStyle[index] !== 'Enable'}
-                        className="form-radio h-4 w-4 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light disabled:opacity-50"
-                      />
-                      <span className="text-text-dark">{item.title}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <p className="text-disabled-gray text-sm p-2">選択できません</p>
-            )}
-          </fieldset>
+              ) : (
+                <p className="text-disabled-gray text-sm p-2">選択できません</p>
+              )}
+            </fieldset>
 
-          {/* Downward Rock Bolt Work */}
-          <fieldset className="mb-6">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">ロックボルト工（下向き）</legend>
-            {uiState.downwardLockBoltEnable ? (
-              <div className="grid grid-cols-2 gap-12">
+            {/* Downward Rock Bolt Work */}
+            <fieldset className="border border-gray-200 rounded p-4">
+              <legend className="mb-3 font-medium text-sm text-gray-800">ロックボルト工（下向き）</legend>
+              {uiState.downwardLockBoltEnable ? (
                 <div className="space-y-3">
                   {downwardLockBoltKouList.map((item, index) => (
                     <label key={item.id} className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-50">
@@ -479,58 +456,35 @@ export default function Page() {
                     </label>
                   ))}
                 </div>
-                <div className="space-y-4">
-                  {downwardLockBoltLengthList.map((item, index) => (
-                    <label
-                      key={item.id}
-                      className={`flex items-center space-x-3 p-2 ${
-                        uiState.downwardLockBoltLengthStyle !== 'Enable' 
-                          ? 'opacity-40 cursor-not-allowed bg-gray-50' 
-                          : 'cursor-pointer hover:bg-gray-50'
-                      }`}
-                    >
+              ) : (
+                <p className="text-disabled-gray text-sm p-2">選択できません</p>
+              )}
+            </fieldset>
+
+            {/* Inner Reinforcement */}
+            <fieldset className="border border-gray-200 rounded p-4">
+              <legend className="mb-3 font-medium text-sm text-gray-800">内巻補強</legend>
+              {!uiState.henkeiMode4Flag ? (
+                <div className="space-y-3">
+                  {uchimakiHokyoList.map((item, index) => (
+                    <label key={item.id} className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-50">
                       <input
                         type="radio"
-                        name="downwardLockBoltLength"
+                        name="uchimakiHokyo"
                         value={item.id}
-                        checked={formData.downwardLockBoltLength === item.id}
-                        onChange={(e) => handleInputChange('downwardLockBoltLength', Number(e.target.value))}
-                        disabled={uiState.downwardLockBoltLengthStyle !== 'Enable'}
-                        className="form-radio h-4 w-4 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light disabled:opacity-50"
+                        checked={formData.uchimakiHokyo === item.id}
+                        onChange={(e) => handleInputChange('uchimakiHokyo', Number(e.target.value))}
+                        className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
                       />
                       <span className="text-text-dark">{item.title}</span>
                     </label>
                   ))}
                 </div>
-              </div>
-            ) : (
-              <p className="text-disabled-gray text-sm p-2">選択できません</p>
-            )}
-          </fieldset>
-
-          {/* Inner Reinforcement */}
-          <fieldset className="mb-6">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">内巻補強</legend>
-            {!uiState.henkeiMode4Flag ? (
-              <div className="space-y-3">
-                {uchimakiHokyoList.map((item, index) => (
-                  <label key={item.id} className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-50">
-                    <input
-                      type="radio"
-                      name="uchimakiHokyo"
-                      value={item.id}
-                      checked={formData.uchimakiHokyo === item.id}
-                      onChange={(e) => handleInputChange('uchimakiHokyo', Number(e.target.value))}
-                      className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
-                    />
-                    <span className="text-text-dark">{item.title}</span>
-                  </label>
-                ))}
-              </div>
-            ) : (
-              <p className="text-disabled-gray text-sm p-2">選択できません</p>
-            )}
-          </fieldset>
+              ) : (
+                <p className="text-disabled-gray text-sm p-2">選択できません</p>
+              )}
+            </fieldset>
+          </div>
         </div>
       </div>
     </div>
