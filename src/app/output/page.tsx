@@ -25,7 +25,7 @@ const OutputPage: NextPage = () => {
   });
 
   // Port of getinputString1
-  const getInputString1 = (data: InputData): string => {
+  const getInputString1 = React.useCallback((data: InputData): string => {
     let result: string;
     switch (data.tunnelKeizyo) {
       case 1:
@@ -45,10 +45,10 @@ const OutputPage: NextPage = () => {
     result += "cm・";
     result += (data.invert === 0) ? "インバートなし" : "インバートあり";
     return result;
-  };
+  }, []);
 
   // Port of getinputString2
-  const getInputString2 = (data: InputData): string => {
+  const getInputString2 = React.useCallback((data: InputData): string => {
     let result: string = (data.haimenKudo === 0) ? "背面空洞なし" : "背面空洞あり";
     result += "・";
     switch (data.henkeiMode) {
@@ -72,10 +72,10 @@ const OutputPage: NextPage = () => {
     result += data.naikuHeniSokudo.toString();
     result += "mm / 年";
     return result;
-  };
+  }, []);
 
   // Port of getinputString3
-  const getInputString3 = (data: InputData): string => {
+  const getInputString3 = React.useCallback((data: InputData): string => {
     let result: string = "";
 
     if (data.uragomeChunyuko === 0) {
@@ -108,10 +108,10 @@ const OutputPage: NextPage = () => {
       result += "m";
     }    
     return result;
-  };
+  }, []);
 
   // Port of getimgString with Next.js public folder path and error handling
-  const getImgString = (caseStrings: string[]): string[] => {
+  const getImgString = React.useCallback((caseStrings: string[]): string[] => {
     // Handle undefined/null case strings
     if (!caseStrings) {
       console.error('Case strings array is undefined or null');
@@ -148,19 +148,19 @@ const OutputPage: NextPage = () => {
       console.error('Error generating image paths:', error);
       return ['/images/placeholder.png', '/images/placeholder.png'];
     }
-  };
+  }, []);
 
   // Port of getDisplacement
-  const getDisplacement = (naikuHeniSokudo: number, effection: number): number => {
+  const getDisplacement = React.useCallback((naikuHeniSokudo: number, effection: number): number => {
     const a: number = naikuHeniSokudo;
     const b: number = effection;
     const c: number = a * (1 - (b / 100));
     // 少数1 桁にラウンド
     return Math.round(c * 10) / 10;
-  };
+  }, []);
 
   // Port of getalertString
-  const getAlertString = (data: InputData): string => {
+  const getAlertString = React.useCallback((data: InputData): string => {
     let makiatsu: number = data.fukukouMakiatsu;
     let kyodo: number = data.jiyamaKyodo;
     if (data.tunnelKeizyo < 3) { // 単線, 複線
@@ -176,7 +176,7 @@ const OutputPage: NextPage = () => {
     }
     kyodo = kyodo < 5 ? 2 : 8;
     return '※この画像は覆工巻厚を' + makiatsu + '、地山強度を' + kyodo + 'とした場合のものです。';
-  };
+  }, []);
 
   // Initialize output state when component mounts or form data changes
   const [error, setError] = React.useState<string>('');

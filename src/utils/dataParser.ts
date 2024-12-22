@@ -154,7 +154,15 @@ export function getCaseStrings(data: InputData, flg: boolean = true): string[] {
   return result;
 }
 
+// Module-level cache for case data
+let cachedCaseData: TunnelCase[] | null = null;
+
 export async function loadCaseData(): Promise<TunnelCase[]> {
+  // Return cached data if available
+  if (cachedCaseData) {
+    return cachedCaseData;
+  }
+
   try {
     const response = await fetch('/data/data.csv');
     if (!response.ok) {
@@ -167,7 +175,8 @@ export async function loadCaseData(): Promise<TunnelCase[]> {
       skipEmptyLines: true
     });
     
-    return result.data
+    // Parse and cache the data
+    const parsedData = result.data
       .slice(1) // Skip header row
       .map(row => {
         const parsedRow = parseCSVRow(row as string[]);
@@ -177,6 +186,10 @@ export async function loadCaseData(): Promise<TunnelCase[]> {
           effectiveness: parsedRow.effectiveness
         };
       });
+    
+    // Store in cache and return
+    cachedCaseData = parsedData;
+    return parsedData;
   } catch (error) {
     console.error('Error loading case data:', error);
     throw error;
