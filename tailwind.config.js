@@ -1,12 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'gitlab-green-light': '#1f7e23',
+        'gitlab-green-dark': '#2e7d32',
+        'form-gray-light': '#e5e7eb',
+        'disabled-gray': '#808080',
+        'text-dark': '#1f2937',
+        'form-shadow': 'rgba(31, 41, 55, 0.05)',
+      },
+    },
   },
   plugins: [],
 }
