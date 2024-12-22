@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { getCaseStrings, calculateEffectiveness, loadCaseData } from '../../utils/dataParser';
 import styles from './output.module.css';
 import type { InputData } from '../../utils/dataParser';
+import { formatInputString1, formatInputString2, formatInputString3 } from '../../utils/formatters/inputFormatters';
+import { logError, getUserErrorMessage } from '../../utils/errorHandling';
 import { useFormData } from '../../context/FormContext';
 // Components are now handled by layout.tsx
 
@@ -24,110 +26,37 @@ const OutputPage: NextPage = () => {
     displacement: 0
   });
 
-  // Port of getinputString1
+  // Use formatters from utils
   const getInputString1 = React.useCallback((data: InputData): string => {
-    let result: string;
-    switch (data.tunnelKeizyo) {
-      case 1:
-        result = "単線";
-        break;
-      case 2:
-        result = "複線";
-        break;
-      case 3:
-        result = "新幹線";
-        break;
-      default:
-        result = "";
-    }
-    result += "・巻厚 ";
-    result += data.fukukouMakiatsu.toString();
-    result += "cm・";
-    result += (data.invert === 0) ? "インバートなし" : "インバートあり";
-    return result;
+    return formatInputString1(data);
   }, []);
 
-  // Port of getinputString2
   const getInputString2 = React.useCallback((data: InputData): string => {
-    let result: string = (data.haimenKudo === 0) ? "背面空洞なし" : "背面空洞あり";
-    result += "・";
-    switch (data.henkeiMode) {
-      case 1:
-        result += "側壁全体押出し";
-        break;
-      case 2:
-        result += "側壁上部前傾";
-        break;
-      case 3:
-        result += "脚部押出し";
-        break;
-      case 4:
-        result += "盤ぶくれ";
-        break;
-    }
-    result += "・地山強度 ";
-    result += data.jiyamaKyodo.toString();
-    result += "MPa";
-    result += "・内空変位速度 ";
-    result += data.naikuHeniSokudo.toString();
-    result += "mm / 年";
-    return result;
+    return formatInputString2(data);
   }, []);
 
-  // Port of getinputString3
   const getInputString3 = React.useCallback((data: InputData): string => {
-    let result: string = "";
-
-    if (data.uragomeChunyuko === 0) {
-      result += "裏込注入なし";
-    } else {
-      result += "裏込注入あり";
-    }
-    result += "・";
-    if (data.lockBoltKou === 0) {
-      result += "ロックボルトなし";
-    } else {
-      result += "ロックボルト ";
-      result += data.lockBoltKou.toString();
-      result += "本-";
-      result += data.lockBoltLength.toString();
-      result += "m";
-    }    
-    result += "・";
-    if (data.uchimakiHokyo === 0) {
-      result += "内巻なし";
-    } else {
-      result += "内巻あり";
-    }
-    if (data.downwardLockBoltKou !== 0) {
-      result += "・";
-      result += "下向きロックボルト ";
-      result += data.downwardLockBoltKou.toString();
-      result += "本-";
-      result += data.downwardLockBoltLength.toString();
-      result += "m";
-    }    
-    return result;
+    return formatInputString3(data);
   }, []);
 
   // Port of getimgString with Next.js public folder path and error handling
   const getImgString = React.useCallback((caseStrings: string[]): string[] => {
     // Handle undefined/null case strings
     if (!caseStrings) {
-      console.error('Case strings array is undefined or null');
+      logError('Case strings array is undefined or null', 'getImgString');
       return ['/images/placeholder.png', '/images/placeholder.png'];
     }
 
     // Handle insufficient array length
     if (caseStrings.length < 3) {
-      console.error('Case strings array has insufficient length:', caseStrings);
+      logError('Case strings array has insufficient length', 'getImgString', caseStrings);
       return ['/images/placeholder.png', '/images/placeholder.png'];
     }
 
     // Validate individual case string values and ensure they're complete
     if (!caseStrings[1] || !caseStrings[2] || 
         !caseStrings[1].startsWith('case') || !caseStrings[2].startsWith('case')) {
-      console.error('Invalid case string values:', caseStrings);
+      logError('Invalid case string values', 'getImgString', caseStrings);
       return ['/images/placeholder.png', '/images/placeholder.png'];
     }
 
@@ -135,7 +64,7 @@ const OutputPage: NextPage = () => {
       // Validate case string format (should match pattern like case3-70-1-1-2-8-1-8-1-0-8)
       const casePattern = /^case\d+(?:-\d+){9,10}$/;
       if (!casePattern.test(caseStrings[1]) || !casePattern.test(caseStrings[2])) {
-        console.error('Case strings do not match expected pattern:', caseStrings);
+        logError('Case strings do not match expected pattern', 'getImgString', caseStrings);
         return ['/images/placeholder.png', '/images/placeholder.png'];
       }
 
@@ -145,7 +74,7 @@ const OutputPage: NextPage = () => {
       
       return [imgString0, imgString1];
     } catch (error) {
-      console.error('Error generating image paths:', error);
+      logError(error, 'getImgString - generating image paths');
       return ['/images/placeholder.png', '/images/placeholder.png'];
     }
   }, []);
@@ -208,8 +137,8 @@ const OutputPage: NextPage = () => {
         });
         setError('');
       } catch (error) {
-        console.error('Error updating output state:', error);
-        setError(error instanceof Error ? error.message : '予期せぬエラーが発生しました。');
+        logError(error, 'updateOutputState');
+        setError(getUserErrorMessage(error));
       }
     };
 
