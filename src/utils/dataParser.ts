@@ -154,9 +154,22 @@ export function getCaseStrings(data: InputData, flg: boolean = true): string[] {
   return result;
 }
 
+// Module-level cache for case data
+let cachedCaseData: TunnelCase[] | null = null;
+
 export async function loadCaseData(): Promise<TunnelCase[]> {
+  // Return cached data if available
+  if (cachedCaseData) {
+    return cachedCaseData;
+  }
+
   try {
-    const response = await fetch('/data/data.csv');
+    // Files in the public directory are served from the root URL
+    const response = await fetch('/data/data.csv', {
+      credentials: 'omit', // Explicitly omit credentials
+      cache: 'no-store' // Prevent browser from caching the response
+    });
+    
     if (!response.ok) {
       throw new Error('Failed to load CSV data');
     }
@@ -164,10 +177,17 @@ export async function loadCaseData(): Promise<TunnelCase[]> {
     const text = await response.text();
     const result = Papa.parse(text, { 
       header: false,
-      skipEmptyLines: true
-    });
+      skipEmptyLines: true,
+      complete: (results) => {
+        if (results.errors.length > 0) {
+          console.error('CSV parsing errors:', results.errors);
+          throw new Error('Failed to parse CSV data');
+        }
+      }
+    }) as Papa.ParseResult<string[]>;
     
-    return result.data
+    // Parse and cache the data
+    const parsedData = result.data
       .slice(1) // Skip header row
       .map(row => {
         const parsedRow = parseCSVRow(row as string[]);
@@ -177,6 +197,10 @@ export async function loadCaseData(): Promise<TunnelCase[]> {
           effectiveness: parsedRow.effectiveness
         };
       });
+    
+    // Store in cache and return
+    cachedCaseData = parsedData;
+    return parsedData;
   } catch (error) {
     console.error('Error loading case data:', error);
     throw error;
