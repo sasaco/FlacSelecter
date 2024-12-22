@@ -4,6 +4,7 @@ import React from 'react';
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { getCaseStrings, calculateEffectiveness, loadCaseData } from '../../utils/dataParser';
+import styles from './output.module.css';
 import type { InputData } from '../../utils/dataParser';
 import { useFormData } from '../../context/FormContext';
 // Components are now handled by layout.tsx
@@ -263,11 +264,11 @@ const OutputPage: NextPage = () => {
                 <Image
                   src={outputState.imgString0}
                   alt="補強前の状態"
-                  width={400}
-                  height={300}
+                  width={350}
+                  height={350}
                   priority
                   unoptimized
-                  className="w-full h-auto"
+                  className={styles.outputImage}
                 />
               </div>
             )}
@@ -279,11 +280,11 @@ const OutputPage: NextPage = () => {
                 <Image
                   src={outputState.imgString1}
                   alt="補強後の状態"
-                  width={400}
-                  height={300}
+                  width={350}
+                  height={350}
                   priority
                   unoptimized
-                  className="w-full h-auto"
+                  className={styles.outputImage}
                 />
               </div>
             )}
