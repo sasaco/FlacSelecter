@@ -224,62 +224,64 @@ const InputPage: NextPage = () => {
       </div>
 
       <div className="space-y-6">
-        <div className="bg-white border border-form-gray-light rounded-lg p-6 shadow-sm">
-          {/* Tunnel Shape */}
-          <fieldset>
-            <legend>トンネル形状</legend>
-            <div className="space-y-3">
-              {tunnelKeizyoList.map((item, index) => (
-                <label key={item.id} className="radio-label">
-                  <input
-                    type="radio"
-                    name="tunnelKeizyo"
-                    value={item.id}
-                    checked={formData.tunnelKeizyo === item.id}
-                    onChange={(e) => handleInputChange('tunnelKeizyo', Number(e.target.value))}
-                    className="form-radio"
-                  />
-                  <span className="text-text-dark">{item.title}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+        <div className="bg-white border border-gray-200 rounded-lg p-8">
+          <div className="flex flex-col md:flex-row md:items-start md:space-x-8 space-y-6 md:space-y-0">
+            {/* Tunnel Shape */}
+            <fieldset className="flex-1">
+              <legend className="mb-4 font-medium text-gray-700">トンネル形状</legend>
+              <div className="space-y-3">
+                {tunnelKeizyoList.map((item, index) => (
+                  <label key={item.id} className="flex items-center space-x-3 cursor-pointer py-1">
+                    <input
+                      type="radio"
+                      name="tunnelKeizyo"
+                      value={item.id}
+                      checked={formData.tunnelKeizyo === item.id}
+                      onChange={(e) => handleInputChange('tunnelKeizyo', Number(e.target.value))}
+                      className="form-radio h-4 w-4 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light border-gray-300"
+                    />
+                    <span className="text-gray-700">{item.title}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
 
-          {/* Lining Thickness */}
-          <fieldset>
-            <legend>覆工巻厚</legend>
-            <div className="flex items-center space-x-3">
-              <input
-                type="number"
-                className="form-input w-40 rounded-md border-form-gray-light focus:border-gitlab-green-light focus:ring-2 focus:ring-gitlab-green-light"
-                value={formData.fukukouMakiatsu}
-                onChange={(e) => handleInputChange('fukukouMakiatsu', Number(e.target.value))}
-                min={30}
-                max={70}
-              />
-              <span className="text-text-dark">cm</span>
-            </div>
-          </fieldset>
+            {/* Lining Thickness */}
+            <fieldset className="flex-1">
+              <legend className="mb-4 font-medium text-gray-700">覆工巻厚</legend>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="number"
+                  className="form-input w-32 px-3 py-2 rounded border-gray-300 focus:border-gitlab-green-light focus:ring-2 focus:ring-gitlab-green-light text-gray-700"
+                  value={formData.fukukouMakiatsu}
+                  onChange={(e) => handleInputChange('fukukouMakiatsu', Number(e.target.value))}
+                  min={30}
+                  max={70}
+                />
+                <span className="text-gray-700">cm</span>
+              </div>
+            </fieldset>
 
-          {/* Invert Presence */}
-          <fieldset>
-            <legend>インバートの有無</legend>
-            <div className="space-y-3">
-              {invertList.map((item, index) => (
-                <label key={item.id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
-                  <input
-                    type="radio"
-                    name="invert"
-                    value={item.id}
-                    checked={formData.invert === item.id}
-                    onChange={(e) => handleInputChange('invert', Number(e.target.value))}
-                    className="form-radio h-4 w-4 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
-                  />
-                  <span className="text-text-dark">{item.title}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+            {/* Invert Presence */}
+            <fieldset className="flex-1">
+              <legend className="mb-4 font-medium text-gray-700">インバートの有無</legend>
+              <div className="space-y-3">
+                {invertList.map((item, index) => (
+                  <label key={item.id} className="flex items-center space-x-3 cursor-pointer py-1">
+                    <input
+                      type="radio"
+                      name="invert"
+                      value={item.id}
+                      checked={formData.invert === item.id}
+                      onChange={(e) => handleInputChange('invert', Number(e.target.value))}
+                      className="form-radio h-4 w-4 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light border-gray-300"
+                    />
+                    <span className="text-gray-700">{item.title}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </div>
         </div>
       </div>
 
