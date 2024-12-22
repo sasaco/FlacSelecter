@@ -2,27 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
+import { useFormData } from '../../context/FormContext';
+import type { InputData } from '../../utils/dataParser';
 
 // Import styles
 import styles from './page.module.css';
-
-// Form data interface matching the Angular service
-interface InputData {
-  tunnelKeizyo: number;
-  fukukouMakiatsu: number;
-  invert: number;
-  haimenKudo: number;
-  henkeiMode: number;
-  jiyamaKyodo: number;
-  naikuHeniSokudo: number;
-  uragomeChunyuko: number;
-  lockBoltKou: number;
-  lockBoltLength: number;
-  downwardLockBoltKou: number;
-  downwardLockBoltLength: number;
-  uchimakiHokyo: number;
-  MonitoringData: string;
-}
 
 // Form options (ported from Angular component)
 const tunnelKeizyoList = [
@@ -84,23 +68,8 @@ const uchimakiHokyoList = [
 ];
 
 const InputPage: NextPage = () => {
-  // Form state
-  const [formData, setFormData] = useState<InputData>({
-    tunnelKeizyo: 1,
-    fukukouMakiatsu: 30,
-    invert: 0,
-    haimenKudo: 0,
-    henkeiMode: 1,
-    jiyamaKyodo: 2,
-    naikuHeniSokudo: 1,
-    uragomeChunyuko: 0,
-    lockBoltKou: 0,
-    lockBoltLength: 0,
-    downwardLockBoltKou: 0,
-    downwardLockBoltLength: 0,
-    uchimakiHokyo: 0,
-    MonitoringData: ''
-  });
+  // Get form state from context
+  const { formData, setFormData } = useFormData();
 
   // UI state for disabled fields
   const [uiState, setUiState] = useState({

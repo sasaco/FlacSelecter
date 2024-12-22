@@ -5,43 +5,13 @@ import type { NextPage } from 'next';
 import Image from 'next/image';
 import styles from './page.module.css';
 import { useRouter } from 'next/router';
-import { getCaseStrings, calculateEffectiveness, loadCaseData } from '@/utils/dataParser';
-
-interface OutputData {
-  tunnelKeizyo: number;
-  fukukouMakiatsu: number;
-  invert: number;
-  haimenKudo: number;
-  henkeiMode: number;
-  jiyamaKyodo: number;
-  naikuHeniSokudo: number;
-  uragomeChunyuko: number;
-  lockBoltKou: number;
-  lockBoltLength: number;
-  downwardLockBoltKou: number;
-  downwardLockBoltLength: number;
-  uchimakiHokyo: number;
-  MonitoringData: string;
-}
+import { getCaseStrings, calculateEffectiveness, loadCaseData } from '../../utils/dataParser';
+import type { InputData } from '../../utils/dataParser';
+import { useFormData } from '../../context/FormContext';
 
 const OutputPage: NextPage = () => {
-  // const router = useRouter();
-  const [formData, setFormData] = React.useState<OutputData>({
-    tunnelKeizyo: 1,
-    fukukouMakiatsu: 30,
-    invert: 0,
-    haimenKudo: 0,
-    henkeiMode: 1,
-    jiyamaKyodo: 2,
-    naikuHeniSokudo: 1,
-    uragomeChunyuko: 0,
-    lockBoltKou: 0,
-    lockBoltLength: 0,
-    downwardLockBoltKou: 0,
-    downwardLockBoltLength: 0,
-    uchimakiHokyo: 0,
-    MonitoringData: ''
-  });
+  // Get form data from context
+  const { formData } = useFormData();
 
   const [outputState, setOutputState] = React.useState({
     inputString1: '',
@@ -55,7 +25,7 @@ const OutputPage: NextPage = () => {
   });
 
   // Port of getinputString1
-  const getInputString1 = (data: OutputData): string => {
+  const getInputString1 = (data: InputData): string => {
     let result: string;
     switch (data.tunnelKeizyo) {
       case 1:
@@ -78,7 +48,7 @@ const OutputPage: NextPage = () => {
   };
 
   // Port of getinputString2
-  const getInputString2 = (data: OutputData): string => {
+  const getInputString2 = (data: InputData): string => {
     let result: string = (data.haimenKudo === 0) ? "背面空洞なし" : "背面空洞あり";
     result += "・";
     switch (data.henkeiMode) {
@@ -105,7 +75,7 @@ const OutputPage: NextPage = () => {
   };
 
   // Port of getinputString3
-  const getInputString3 = (data: OutputData): string => {
+  const getInputString3 = (data: InputData): string => {
     let result: string = "";
 
     if (data.uragomeChunyuko === 0) {
@@ -190,7 +160,7 @@ const OutputPage: NextPage = () => {
   };
 
   // Port of getalertString
-  const getAlertString = (data: OutputData): string => {
+  const getAlertString = (data: InputData): string => {
     let makiatsu: number = data.fukukouMakiatsu;
     let kyodo: number = data.jiyamaKyodo;
     if (data.tunnelKeizyo < 3) { // 単線, 複線
