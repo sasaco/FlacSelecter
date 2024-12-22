@@ -4,10 +4,13 @@ import React from 'react';
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { getCaseStrings, calculateEffectiveness, loadCaseData } from '../../utils/dataParser';
-import styles from './output.module.css';
+import styles from '../../components/styles/output.module.css';
 import type { InputData } from '../../utils/dataParser';
 import { formatInputString1, formatInputString2, formatInputString3 } from '../../utils/formatters/inputFormatters';
 import { logError, getUserErrorMessage } from '../../utils/errorHandling';
+import { InputDisplay } from '../../components/InputDisplay';
+import { NumericOutput } from '../../components/NumericOutput';
+import { ImageComparison } from '../../components/ImageComparison';
 import { useFormData } from '../../context/FormContext';
 // Components are now handled by layout.tsx
 
@@ -153,72 +156,21 @@ const OutputPage: NextPage = () => {
             {error}
           </div>
         )}
-        <div className="space-y-4 bg-white rounded border border-gray-200 p-8 mb-10">
-          <div className="flex">
-            <span className="text-gray-700 mr-3">構造条件:</span>
-            <span className="text-gray-900">{outputState.inputString1}</span>
-          </div>
-          <div className="flex">
-            <span className="text-gray-700 mr-3">調査・計測結果:</span>
-            <span className="text-gray-900">{outputState.inputString2}</span>
-          </div>
-          <div className="flex">
-            <span className="text-gray-700 mr-3">対策工条件:</span>
-            <span className="text-gray-900">{outputState.inputString3}</span>
-          </div>
-        </div>
+        <InputDisplay
+          inputString1={outputState.inputString1}
+          inputString2={outputState.inputString2}
+          inputString3={outputState.inputString3}
+        />
 
-        <div className="grid grid-cols-2 gap-16 mb-16">
-          <div>
-            <h3 className="text-base font-medium text-gray-900 mb-4">対策後の予測内空変位速度</h3>
-            <div className="flex items-center">
-              <span className="bg-white px-6 py-3 rounded border border-gray-200 font-mono text-lg">{outputState.displacement}</span>
-              <span className="ml-3 text-gray-700">mm/年</span>
-            </div>
-          </div>
-          <div>
-            <h3 className="text-base font-medium text-gray-900 mb-4">変位抑制効果</h3>
-            <div className="flex items-center">
-              <span className="bg-white px-6 py-3 rounded border border-gray-200 font-mono text-lg">{outputState.effection}</span>
-              <span className="ml-3 text-gray-700">％</span>
-            </div>
-          </div>
-        </div>
+        <NumericOutput
+          displacement={outputState.displacement}
+          effection={outputState.effection}
+        />
 
-        <div className="grid grid-cols-2 gap-12">
-          <div>
-            <h3 className="text-base font-medium text-gray-900 mb-4">【対策工なし】</h3>
-            {outputState.imgString0 && (
-              <div className="bg-white border border-gray-300 rounded p-4">
-                <Image
-                  src={outputState.imgString0}
-                  alt="補強前の状態"
-                  width={350}
-                  height={350}
-                  priority
-                  unoptimized
-                  className={styles.outputImage}
-                />
-              </div>
-            )}
-          </div>
-          <div>
-            <h3 className="text-base font-medium text-gray-900 mb-4">【対策工あり】</h3>
-            {outputState.imgString1 && (
-              <div className="bg-white border border-gray-300 rounded p-4">
-                <Image
-                  src={outputState.imgString1}
-                  alt="補強後の状態"
-                  width={350}
-                  height={350}
-                  priority
-                  unoptimized
-                  className={styles.outputImage}
-                />
-              </div>
-            )}
-          </div>
-        </div>
+        <ImageComparison
+          beforeImage={outputState.imgString0}
+          afterImage={outputState.imgString1}
+        />
         
         {outputState.alertString && (
           <div className="mt-8 p-4 bg-yellow-50 border border-yellow-300 text-yellow-700 rounded">
