@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import type { NextPage } from 'next';
+import type { FC } from 'react';
 import { useFormData } from '../../context/FormContext';
 import type { InputData } from '../../utils/dataParser';
 
@@ -66,7 +66,7 @@ const uchimakiHokyoList = [
   { id: 1, title: 'あり' }
 ];
 
-const InputPage: NextPage = () => {
+export default function Page() {
   // Get form state from context
   const { formData, setFormData } = useFormData();
 
@@ -223,13 +223,13 @@ const InputPage: NextPage = () => {
         <div className="section-underline" />
       </div>
 
-      <div className="space-y-6">
-        <div className="bg-white p-6">
-          <div className="flex flex-col md:flex-row md:items-start md:space-x-4 space-y-6 md:space-y-0">
+      <div className="space-y-3">
+        <div className="bg-white p-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* Tunnel Shape */}
-            <fieldset className="flex-1 border border-gray-300 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">トンネル形状</legend>
-              <div className="space-y-2">
+            <fieldset className="border border-gray-200 rounded p-3">
+              <legend className="mb-2 font-medium text-sm text-gray-700">トンネル形状</legend>
+              <div className="space-y-1.5">
                 {tunnelKeizyoList.map((item, index) => (
                   <label key={item.id} className="flex items-center space-x-2 cursor-pointer">
                     <input
@@ -238,34 +238,34 @@ const InputPage: NextPage = () => {
                       value={item.id}
                       checked={formData.tunnelKeizyo === item.id}
                       onChange={(e) => handleInputChange('tunnelKeizyo', Number(e.target.value))}
-                      className="form-radio h-3 w-3 text-gitlab-green-dark focus:ring-1 focus:ring-gitlab-green-light border-gray-300"
+                      className="form-radio h-3 w-3 text-gray-700 focus:ring-1 focus:ring-gray-400 border-gray-300"
                     />
-                    <span className="text-sm text-gray-800">{item.title}</span>
+                    <span className="text-sm text-gray-700">{item.title}</span>
                   </label>
                 ))}
               </div>
             </fieldset>
 
             {/* Lining Thickness */}
-            <fieldset className="flex-1 border border-gray-300 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">覆工巻厚</legend>
+            <fieldset className="border border-gray-200 rounded p-3">
+              <legend className="mb-2 font-medium text-sm text-gray-700">覆工巻厚</legend>
               <div className="flex items-center space-x-2">
                 <input
                   type="number"
-                  className="form-input w-20 px-2 py-1 rounded border-gray-300 focus:border-gitlab-green-light focus:ring-1 focus:ring-gitlab-green-light text-gray-800"
+                  className="form-input w-20 px-2 py-1 rounded border-gray-300 focus:border-gray-400 focus:ring-1 focus:ring-gray-400 text-gray-700"
                   value={formData.fukukouMakiatsu}
                   onChange={(e) => handleInputChange('fukukouMakiatsu', Number(e.target.value))}
                   min={30}
                   max={70}
                 />
-                <span className="text-sm text-gray-800">cm</span>
+                <span className="text-sm text-gray-700">cm</span>
               </div>
             </fieldset>
 
             {/* Invert Presence */}
-            <fieldset className="flex-1 border border-gray-300 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">インバートの有無</legend>
-              <div className="space-y-2">
+            <fieldset className="border border-gray-200 rounded p-3">
+              <legend className="mb-2 font-medium text-sm text-gray-700">インバートの有無</legend>
+              <div className="space-y-1.5">
                 {invertList.map((item, index) => (
                   <label key={item.id} className="flex items-center space-x-2 cursor-pointer">
                     <input
@@ -274,9 +274,9 @@ const InputPage: NextPage = () => {
                       value={item.id}
                       checked={formData.invert === item.id}
                       onChange={(e) => handleInputChange('invert', Number(e.target.value))}
-                      className="form-radio h-3 w-3 text-gitlab-green-dark focus:ring-1 focus:ring-gitlab-green-light border-gray-300"
+                      className="form-radio h-3 w-3 text-gray-700 focus:ring-1 focus:ring-gray-400 border-gray-300"
                     />
-                    <span className="text-sm text-gray-800">{item.title}</span>
+                    <span className="text-sm text-gray-700">{item.title}</span>
                   </label>
                 ))}
               </div>
@@ -290,11 +290,11 @@ const InputPage: NextPage = () => {
         <div className="section-underline" />
       </div>
 
-      <div className="space-y-8">
-        <div className="bg-white border border-form-gray-light rounded-lg p-6 shadow-sm">
+      <div className="space-y-4">
+        <div className="bg-gray-50 p-4">
           {/* Back Cavity */}
-          <fieldset>
-            <legend>背面空洞の有無</legend>
+          <fieldset className="border border-gray-200 rounded p-4">
+            <legend className="mb-3 font-medium text-sm text-gray-800">背面空洞の有無</legend>
             <div className="space-y-3">
               {haimenKudoList.map((item, index) => (
                 <label key={item.id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
@@ -313,8 +313,8 @@ const InputPage: NextPage = () => {
           </fieldset>
 
           {/* Deformation Mode */}
-          <fieldset>
-            <legend>変形モード</legend>
+          <fieldset className="border border-gray-200 rounded p-4 mt-4">
+            <legend className="mb-3 font-medium text-sm text-gray-800">変形モード</legend>
             <div className="space-y-3">
               {henkeiModeList.map((item, index) => (
                 <label
@@ -341,8 +341,8 @@ const InputPage: NextPage = () => {
           </fieldset>
 
           {/* Ground Strength */}
-          <fieldset>
-            <legend>地山強度</legend>
+          <fieldset className="border border-gray-200 rounded p-4 mt-4">
+            <legend className="mb-3 font-medium text-sm text-gray-800">地山強度</legend>
             <div className="flex items-center space-x-3">
               <input
                 type="number"
@@ -357,8 +357,8 @@ const InputPage: NextPage = () => {
           </fieldset>
 
           {/* Inner Displacement Speed */}
-          <fieldset>
-            <legend>内空変位速度, 盤ぶくれ速度</legend>
+          <fieldset className="border border-gray-200 rounded p-4 mt-4">
+            <legend className="mb-3 font-medium text-sm text-gray-800">内空変位速度, 盤ぶくれ速度</legend>
             <div className="flex items-center space-x-3">
               <input
                 type="number"
@@ -380,11 +380,11 @@ const InputPage: NextPage = () => {
         <div className="section-underline" />
       </div>
 
-      <div className="space-y-8">
-        <div className="bg-white border border-form-gray-light rounded-lg p-6 shadow-sm">
+      <div className="space-y-4">
+        <div className="bg-gray-50 p-4">
           {/* Back Filling Injection */}
-          <fieldset>
-            <legend>裏込注入工</legend>
+          <fieldset className="border border-gray-200 rounded p-4">
+            <legend className="mb-3 font-medium text-sm text-gray-800">裏込注入工</legend>
             <div className="space-y-3">
               {uragomeChunyukoList.map((item, index) => (
                 <label
@@ -536,5 +536,3 @@ const InputPage: NextPage = () => {
     </div>
   );
 };
-
-export default InputPage;
