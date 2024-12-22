@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="jp">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <header>
           <nav className={styles.headerNav}>
