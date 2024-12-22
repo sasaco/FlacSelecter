@@ -3,7 +3,6 @@
 import React from 'react';
 import type { NextPage } from 'next';
 import Image from 'next/image';
-import styles from './page.module.css';
 import { useRouter } from 'next/router';
 import { getCaseStrings, calculateEffectiveness, loadCaseData } from '../../utils/dataParser';
 import type { InputData } from '../../utils/dataParser';
@@ -217,49 +216,50 @@ const OutputPage: NextPage = () => {
   }, [formData]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.result}>
+    <div className="container mx-auto px-4 py-8">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
         {error && (
-          <div className={styles.error}>
+          <div className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-200 px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
-        <div className={styles.conditionsSummary}>
-          <div className={styles.line}>
-            <div className={styles.conditionName}>構造条件</div>:
-            <div className={styles.content}>{outputState.inputString1}</div>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <div className="font-semibold text-gray-900 dark:text-gray-100">構造条件</div>:
+            <div className="text-gray-700 dark:text-gray-300">{outputState.inputString1}</div>
           </div>
-          <div className={styles.line}>
-            <div className={styles.conditionName}>調査・計測結果</div>:
-            <div className={styles.content}>{outputState.inputString2}</div>
+          <div className="flex items-center space-x-2">
+            <div className="font-semibold text-gray-900 dark:text-gray-100">調査・計測結果</div>:
+            <div className="text-gray-700 dark:text-gray-300">{outputState.inputString2}</div>
           </div>
-          <div className={styles.line}>
-            <div className={styles.conditionName}>対策工条件</div>:
-            <div className={styles.content}>{outputState.inputString3}</div>
-          </div>
-        </div>
-
-        <div className={styles.resultNumbers}>
-          <div>
-            <div>対策後の予測内空変位速度</div>
-            <div className={styles.number}>
-              <span className={styles.numberBox}>{outputState.displacement}</span>
-              mm/年
-            </div>
-          </div>
-          <div>
-            <div>変位抑制効果</div>
-            <div className={styles.number}>
-              <span className={styles.numberBox}>{outputState.effection}</span>％
-            </div>
+          <div className="flex items-center space-x-2">
+            <div className="font-semibold text-gray-900 dark:text-gray-100">対策工条件</div>:
+            <div className="text-gray-700 dark:text-gray-300">{outputState.inputString3}</div>
           </div>
         </div>
 
-        <div className={styles.images}>
+        <div className="mt-8 grid grid-cols-2 gap-8">
           <div>
-            <div>【対策工なし】</div>
+            <div className="mb-2">対策後の予測内空変位速度</div>
+            <div className="flex items-center space-x-2">
+              <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded">{outputState.displacement}</span>
+              <span>mm/年</span>
+            </div>
+          </div>
+          <div>
+            <div className="mb-2">変位抑制効果</div>
+            <div className="flex items-center space-x-2">
+              <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded">{outputState.effection}</span>
+              <span>％</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 grid grid-cols-2 gap-8">
+          <div>
+            <div className="mb-4 font-semibold">【対策工なし】</div>
             {outputState.imgString0 && (
-              <div className={styles.imageWrapper}>
+              <div className="relative w-full aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
                 <Image
                   src={outputState.imgString0}
                   alt="補強前の状態"
@@ -267,14 +267,15 @@ const OutputPage: NextPage = () => {
                   height={300}
                   priority
                   unoptimized
+                  className="object-contain"
                 />
               </div>
             )}
           </div>
           <div>
-            <div>【対策工あり】</div>
+            <div className="mb-4 font-semibold">【対策工あり】</div>
             {outputState.imgString1 && (
-              <div className={styles.imageWrapper}>
+              <div className="relative w-full aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
                 <Image
                   src={outputState.imgString1}
                   alt="補強後の状態"
@@ -282,6 +283,7 @@ const OutputPage: NextPage = () => {
                   height={300}
                   priority
                   unoptimized
+                  className="object-contain"
                 />
               </div>
             )}
@@ -289,7 +291,7 @@ const OutputPage: NextPage = () => {
         </div>
         
         {outputState.alertString && (
-          <div className={styles.alert}>
+          <div className="mt-6 p-4 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded">
             <div>{outputState.alertString}</div>
           </div>
         )}
