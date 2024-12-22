@@ -112,47 +112,91 @@ const InputPage: NextPage = () => {
     downwardLockBoltEnable: false
   });
 
-  // Update UI state when form data changes
-  useEffect(() => {
-    updateUIState();
-  }, [formData]);
-
-  // Port of setEnable() from Angular
+  // Update UI state based on specific form data changes
   const updateUIState = () => {
     const newUIState = { ...uiState };
 
-    // Handle Shinkansen case
+    // Handle Shinkansen case UI updates
     if (formData.tunnelKeizyo === 3) {
       newUIState.henkeiModeStyle = ['Enable', 'Enable', 'Enable', 'Enable'];
       if (formData.haimenKudo === 1) {
-        if (formData.henkeiMode === 4) {
-          setFormData(prev => ({ ...prev, henkeiMode: 1 }));
-        }
         newUIState.henkeiModeStyle[3] = 'Disable';
+      }
+    } else {
+      newUIState.henkeiModeStyle = ['Enable', 'Enable', 'Enable', 'Disable'];
+      newUIState.downwardLockBoltEnable = false;
+    }
+
+    // Handle deformation mode UI updates
+    if (formData.henkeiMode === 4) {
+      newUIState.henkeiMode4Flag = true;
+      newUIState.downwardLockBoltEnable = true;
+    } else {
+      newUIState.henkeiMode4Flag = false;
+      newUIState.downwardLockBoltEnable = false;
+    }
+
+    // Handle back cavity and injection UI updates
+    if (formData.haimenKudo === 0) {
+      newUIState.uragomeChunyukoStyle = ['Enable', 'Disable'];
+    } else {
+      newUIState.uragomeChunyukoStyle = ['Disable', 'Enable'];
+    }
+
+    // Handle rock bolt length UI updates
+    if (formData.lockBoltKou === 0) {
+      newUIState.lockBoltLengthStyle = ['Disable', 'Disable', 'Disable', 'Disable'];
+    } else {
+      switch (formData.tunnelKeizyo) {
+        case 1: // Single track: 3, 6m
+          newUIState.lockBoltLengthStyle = ['Enable', 'Enable', 'Disable', 'Disable'];
+          break;
+        case 2: // Double track: 4, 8m
+        case 3: // Shinkansen: 4, 8m
+          newUIState.lockBoltLengthStyle = ['Disable', 'Disable', 'Enable', 'Enable'];
+          break;
+      }
+    }
+
+    // Handle downward rock bolt length UI updates
+    newUIState.downwardLockBoltLengthStyle = formData.downwardLockBoltKou !== 0 ? 'Enable' : 'Disable';
+
+    setUiState(newUIState);
+  };
+
+  // Update UI state when relevant form data changes
+  useEffect(() => {
+    updateUIState();
+  }, [
+    formData.tunnelKeizyo,
+    formData.haimenKudo,
+    formData.henkeiMode,
+    formData.lockBoltKou,
+    formData.downwardLockBoltKou
+  ]);
+
+  // Handle Shinkansen-specific constraints
+  useEffect(() => {
+    if (formData.tunnelKeizyo === 3) {
+      if (formData.haimenKudo === 1 && formData.henkeiMode === 4) {
+        setFormData(prev => ({ ...prev, henkeiMode: 1 }));
       }
       if (formData.fukukouMakiatsu < 50) {
         setFormData(prev => ({ ...prev, fukukouMakiatsu: 50 }));
       }
     } else {
-      newUIState.henkeiModeStyle = ['Enable', 'Enable', 'Enable', 'Disable'];
       if (formData.henkeiMode === 4) {
         setFormData(prev => ({ ...prev, henkeiMode: 1 }));
       }
-      newUIState.downwardLockBoltEnable = false;
-      setFormData(prev => ({
-        ...prev,
-        downwardLockBoltKou: 0,
-        downwardLockBoltLength: 0
-      }));
       if (formData.fukukouMakiatsu > 60) {
         setFormData(prev => ({ ...prev, fukukouMakiatsu: 60 }));
       }
     }
+  }, [formData.tunnelKeizyo, formData.haimenKudo, formData.henkeiMode, formData.fukukouMakiatsu]);
 
-    // Handle deformation mode
+  // Handle deformation mode constraints
+  useEffect(() => {
     if (formData.henkeiMode === 4) {
-      newUIState.henkeiMode4Flag = true;
-      newUIState.downwardLockBoltEnable = true;
       setFormData(prev => ({
         ...prev,
         lockBoltKou: 0,
@@ -160,59 +204,44 @@ const InputPage: NextPage = () => {
         uchimakiHokyo: 0
       }));
     } else {
-      newUIState.henkeiMode4Flag = false;
-      newUIState.downwardLockBoltEnable = false;
       setFormData(prev => ({
         ...prev,
         downwardLockBoltKou: 0,
         downwardLockBoltLength: 0
       }));
     }
+  }, [formData.henkeiMode]);
 
-    // Handle back cavity and injection
-    if (formData.haimenKudo === 0) {
-      newUIState.uragomeChunyukoStyle = ['Enable', 'Disable'];
-      setFormData(prev => ({ ...prev, uragomeChunyuko: 0 }));
-    } else {
-      newUIState.uragomeChunyukoStyle = ['Disable', 'Enable'];
-      setFormData(prev => ({ ...prev, uragomeChunyuko: 1 }));
-    }
+  // Handle back cavity and injection constraints
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      uragomeChunyuko: formData.haimenKudo === 0 ? 0 : 1
+    }));
+  }, [formData.haimenKudo]);
 
-    // Handle rock bolt length
+  // Handle rock bolt length constraints
+  useEffect(() => {
     if (formData.lockBoltKou === 0) {
-      newUIState.lockBoltLengthStyle = ['Disable', 'Disable', 'Disable', 'Disable'];
       setFormData(prev => ({ ...prev, lockBoltLength: 0 }));
     } else {
-      switch (formData.tunnelKeizyo) {
-        case 1: // Single track: 3, 6m
-          newUIState.lockBoltLengthStyle = ['Enable', 'Enable', 'Disable', 'Disable'];
-          if (formData.lockBoltLength !== 3 && formData.lockBoltLength !== 6) {
-            setFormData(prev => ({ ...prev, lockBoltLength: 3 }));
-          }
-          break;
-        case 2: // Double track: 4, 8m
-        case 3: // Shinkansen: 4, 8m
-          newUIState.lockBoltLengthStyle = ['Disable', 'Disable', 'Enable', 'Enable'];
-          if (formData.lockBoltLength !== 4 && formData.lockBoltLength !== 8) {
-            setFormData(prev => ({ ...prev, lockBoltLength: 4 }));
-          }
-          break;
+      const isSingleTrack = formData.tunnelKeizyo === 1;
+      if (isSingleTrack && formData.lockBoltLength !== 3 && formData.lockBoltLength !== 6) {
+        setFormData(prev => ({ ...prev, lockBoltLength: 3 }));
+      } else if (!isSingleTrack && formData.lockBoltLength !== 4 && formData.lockBoltLength !== 8) {
+        setFormData(prev => ({ ...prev, lockBoltLength: 4 }));
       }
     }
+  }, [formData.lockBoltKou, formData.tunnelKeizyo, formData.lockBoltLength]);
 
-    // Handle downward rock bolt length
-    if (formData.downwardLockBoltKou !== 0) {
-      newUIState.downwardLockBoltLengthStyle = 'Enable';
-      if (formData.downwardLockBoltLength === 0) {
-        setFormData(prev => ({ ...prev, downwardLockBoltLength: 4 }));
-      }
-    } else {
-      newUIState.downwardLockBoltLengthStyle = 'Disable';
+  // Handle downward rock bolt length constraints
+  useEffect(() => {
+    if (formData.downwardLockBoltKou === 0) {
       setFormData(prev => ({ ...prev, downwardLockBoltLength: 0 }));
+    } else if (formData.downwardLockBoltLength === 0) {
+      setFormData(prev => ({ ...prev, downwardLockBoltLength: 4 }));
     }
-
-    setUiState(newUIState);
-  };
+  }, [formData.downwardLockBoltKou, formData.downwardLockBoltLength]);
 
   // Handle form field changes
   const handleInputChange = (field: keyof InputData, value: number | string) => {

@@ -142,14 +142,42 @@ const OutputPage: NextPage = () => {
 
   // Port of getimgString with Next.js public folder path and error handling
   const getImgString = (caseStrings: string[]): string[] => {
-    if (!caseStrings || caseStrings.length < 3) {
-      throw new Error('Invalid case strings array');
+    // Handle undefined/null case strings
+    if (!caseStrings) {
+      console.error('Case strings array is undefined or null');
+      return ['/images/placeholder.png', '/images/placeholder.png'];
     }
-    // 補強しなかった場合のファイル名
-    const imgString0: string = `/images/${caseStrings[1]}.png`;
-    // 補強後 のファイル名
-    const imgString1: string = `/images/${caseStrings[2]}.png`;
-    return [imgString0, imgString1];
+
+    // Handle insufficient array length
+    if (caseStrings.length < 3) {
+      console.error('Case strings array has insufficient length:', caseStrings);
+      return ['/images/placeholder.png', '/images/placeholder.png'];
+    }
+
+    // Validate individual case string values and ensure they're complete
+    if (!caseStrings[1] || !caseStrings[2] || 
+        !caseStrings[1].startsWith('case') || !caseStrings[2].startsWith('case')) {
+      console.error('Invalid case string values:', caseStrings);
+      return ['/images/placeholder.png', '/images/placeholder.png'];
+    }
+
+    try {
+      // Validate case string format (should match pattern like case3-70-1-1-2-8-1-8-1-0-8)
+      const casePattern = /^case\d+(?:-\d+){9,10}$/;
+      if (!casePattern.test(caseStrings[1]) || !casePattern.test(caseStrings[2])) {
+        console.error('Case strings do not match expected pattern:', caseStrings);
+        return ['/images/placeholder.png', '/images/placeholder.png'];
+      }
+
+      // Don't encode the paths - Next.js Image component will handle that
+      const imgString0 = `/images/${caseStrings[1]}.png`;
+      const imgString1 = `/images/${caseStrings[2]}.png`;
+      
+      return [imgString0, imgString1];
+    } catch (error) {
+      console.error('Error generating image paths:', error);
+      return ['/images/placeholder.png', '/images/placeholder.png'];
+    }
   };
 
   // Port of getDisplacement
@@ -187,6 +215,9 @@ const OutputPage: NextPage = () => {
     const updateOutputState = async () => {
       try {
         const caseStrings = getCaseStrings(formData);
+        if (!caseStrings || caseStrings.length < 3) {
+          throw new Error('画像の生成に必要なデータが不足しています。');
+        }
         const imgStrings = getImgString(caseStrings);
         const caseData = await loadCaseData();
         const result = calculateEffectiveness(caseData, formData);
@@ -257,23 +288,33 @@ const OutputPage: NextPage = () => {
         <div className={styles.images}>
           <div>
             <div>【対策工なし】</div>
-            <Image
-              src={outputState.imgString0}
-              alt="補強前の状態"
-              width={400}
-              height={300}
-              priority
-            />
+            {outputState.imgString0 && (
+              <div className={styles.imageWrapper}>
+                <Image
+                  src={outputState.imgString0}
+                  alt="補強前の状態"
+                  width={400}
+                  height={300}
+                  priority
+                  unoptimized
+                />
+              </div>
+            )}
           </div>
           <div>
             <div>【対策工あり】</div>
-            <Image
-              src={outputState.imgString1}
-              alt="補強後の状態"
-              width={400}
-              height={300}
-              priority
-            />
+            {outputState.imgString1 && (
+              <div className={styles.imageWrapper}>
+                <Image
+                  src={outputState.imgString1}
+                  alt="補強後の状態"
+                  width={400}
+                  height={300}
+                  priority
+                  unoptimized
+                />
+              </div>
+            )}
           </div>
         </div>
         
