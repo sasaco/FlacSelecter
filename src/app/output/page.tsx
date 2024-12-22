@@ -3,10 +3,10 @@
 import React from 'react';
 import type { NextPage } from 'next';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import { getCaseStrings, calculateEffectiveness, loadCaseData } from '../../utils/dataParser';
 import type { InputData } from '../../utils/dataParser';
 import { useFormData } from '../../context/FormContext';
+// Components are now handled by layout.tsx
 
 const OutputPage: NextPage = () => {
   // Get form data from context
@@ -216,50 +216,50 @@ const OutputPage: NextPage = () => {
   }, [formData]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <div className="min-h-screen bg-white">
+      <main className="max-w-6xl mx-auto px-4 py-6">
         {error && (
-          <div className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-200 px-4 py-3 rounded mb-4">
+          <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
-        <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <div className="font-semibold text-gray-900 dark:text-gray-100">構造条件</div>:
-            <div className="text-gray-700 dark:text-gray-300">{outputState.inputString1}</div>
+        <div className="space-y-4 bg-white rounded border border-gray-200 p-8 mb-10">
+          <div className="flex">
+            <span className="text-gray-700 mr-3">構造条件:</span>
+            <span className="text-gray-900">{outputState.inputString1}</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="font-semibold text-gray-900 dark:text-gray-100">調査・計測結果</div>:
-            <div className="text-gray-700 dark:text-gray-300">{outputState.inputString2}</div>
+          <div className="flex">
+            <span className="text-gray-700 mr-3">調査・計測結果:</span>
+            <span className="text-gray-900">{outputState.inputString2}</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="font-semibold text-gray-900 dark:text-gray-100">対策工条件</div>:
-            <div className="text-gray-700 dark:text-gray-300">{outputState.inputString3}</div>
-          </div>
-        </div>
-
-        <div className="mt-8 grid grid-cols-2 gap-8">
-          <div>
-            <div className="mb-2">対策後の予測内空変位速度</div>
-            <div className="flex items-center space-x-2">
-              <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded">{outputState.displacement}</span>
-              <span>mm/年</span>
-            </div>
-          </div>
-          <div>
-            <div className="mb-2">変位抑制効果</div>
-            <div className="flex items-center space-x-2">
-              <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded">{outputState.effection}</span>
-              <span>％</span>
-            </div>
+          <div className="flex">
+            <span className="text-gray-700 mr-3">対策工条件:</span>
+            <span className="text-gray-900">{outputState.inputString3}</span>
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 gap-16 mb-16">
           <div>
-            <div className="mb-4 font-semibold">【対策工なし】</div>
+            <h3 className="text-base font-medium text-gray-900 mb-4">対策後の予測内空変位速度</h3>
+            <div className="flex items-center">
+              <span className="bg-white px-6 py-3 rounded border border-gray-200 font-mono text-lg">{outputState.displacement}</span>
+              <span className="ml-3 text-gray-700">mm/年</span>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-base font-medium text-gray-900 mb-4">変位抑制効果</h3>
+            <div className="flex items-center">
+              <span className="bg-white px-6 py-3 rounded border border-gray-200 font-mono text-lg">{outputState.effection}</span>
+              <span className="ml-3 text-gray-700">％</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-12">
+          <div>
+            <h3 className="text-base font-medium text-gray-900 mb-4">【対策工なし】</h3>
             {outputState.imgString0 && (
-              <div className="relative w-full aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="bg-white border border-gray-300 rounded p-4">
                 <Image
                   src={outputState.imgString0}
                   alt="補強前の状態"
@@ -267,15 +267,15 @@ const OutputPage: NextPage = () => {
                   height={300}
                   priority
                   unoptimized
-                  className="object-contain"
+                  className="w-full h-auto"
                 />
               </div>
             )}
           </div>
           <div>
-            <div className="mb-4 font-semibold">【対策工あり】</div>
+            <h3 className="text-base font-medium text-gray-900 mb-4">【対策工あり】</h3>
             {outputState.imgString1 && (
-              <div className="relative w-full aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="bg-white border border-gray-300 rounded p-4">
                 <Image
                   src={outputState.imgString1}
                   alt="補強後の状態"
@@ -283,7 +283,7 @@ const OutputPage: NextPage = () => {
                   height={300}
                   priority
                   unoptimized
-                  className="object-contain"
+                  className="w-full h-auto"
                 />
               </div>
             )}
@@ -291,11 +291,11 @@ const OutputPage: NextPage = () => {
         </div>
         
         {outputState.alertString && (
-          <div className="mt-6 p-4 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded">
-            <div>{outputState.alertString}</div>
+          <div className="mt-8 p-4 bg-yellow-50 border border-yellow-300 text-yellow-700 rounded">
+            {outputState.alertString}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

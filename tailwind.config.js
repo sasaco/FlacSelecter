@@ -6,8 +6,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'gitlab-green-light': '#1f7e23',
-        'gitlab-green-dark': '#2e7d32',
+        'gitlab-green-light': '#A5C88F',
+        'gitlab-green-dark': '#4F7942',
         'form-gray-light': '#e5e7eb',
         'disabled-gray': '#808080',
         'text-dark': '#1f2937',

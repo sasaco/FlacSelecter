@@ -27,13 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="jp">
-      <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white dark:bg-gray-900`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-gray-50`}>
         <FormProvider>
           <Header />
           <Nav />
-          <main className="container mx-auto px-4 py-8">
-            {children}
-          </main>
+          {children}
         </FormProvider>
       </body>
     </html>

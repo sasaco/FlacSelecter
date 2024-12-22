@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .form-radio {
+    @apply w-4 h-4 border border-gitlab-green-dark text-gitlab-green-dark focus:ring-1 focus:ring-gitlab-green-light focus:ring-offset-0;
+  }
+  
+  input[type="number"] {
+    @apply w-28 px-2 py-1.5 border border-form-gray-light rounded focus:ring-1 focus:ring-gitlab-green-light focus:border-gitlab-green-light;
+  }
+
+  input:disabled + span {
+    @apply text-disabled-gray cursor-not-allowed;
+  }
+
+  input:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  fieldset {
+    @apply mb-6;
+  }
+
+  fieldset legend {
+    @apply text-base font-medium mb-3 text-text-dark;
+  }
+
+  label.radio-label {
+    @apply flex items-center gap-2 cursor-pointer hover:bg-gray-50 py-1.5 px-2 rounded;
+  }
+
+  .section-title {
+    @apply text-lg font-medium text-text-dark mb-1;
+  }
+
+  .section-underline {
+    @apply h-[1px] bg-gitlab-green-light w-full mb-6;
+  }
+}

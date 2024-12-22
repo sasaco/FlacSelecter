@@ -8,23 +8,23 @@ export default function Nav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex bg-gitlab-green-dark">
+    <nav className="flex bg-[#34C240]">
       <Link 
         href="/input"
-        className={`px-6 py-2 font-medium ${
+        className={`px-6 py-2 text-sm font-medium ${
           pathname === '/input'
-            ? 'bg-gitlab-green-light text-text-dark'
-            : 'text-white hover:bg-gitlab-green-light hover:text-text-dark'
+            ? 'bg-white text-[#34C240] rounded-t-md'
+            : 'text-white hover:bg-[#3DD249]'
         }`}
       >
         条件の設定
       </Link>
       <Link 
         href="/output"
-        className={`px-6 py-2 font-medium ${
+        className={`px-6 py-2 text-sm font-medium ${
           pathname === '/output'
-            ? 'bg-gitlab-green-light text-text-dark'
-            : 'text-white hover:bg-gitlab-green-light hover:text-text-dark'
+            ? 'bg-white text-[#34C240] rounded-t-md'
+            : 'text-white hover:bg-[#3DD249]'
         }`}
       >
         結果

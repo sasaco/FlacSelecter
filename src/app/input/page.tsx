@@ -217,27 +217,27 @@ const InputPage: NextPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-8 py-8">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-text-dark mb-2">構造条件</h2>
-        <div className="h-0.5 bg-gitlab-green-light" />
+    <div className="container mx-auto px-6 py-6">
+      <div>
+        <h2 className="section-title">構造条件</h2>
+        <div className="section-underline" />
       </div>
 
-      <div className="space-y-8">
-        <div className="bg-white border border-form-gray-light rounded-lg p-8 shadow-[0_1px_3px_0_var(--tw-shadow-color)] shadow-form-shadow">
+      <div className="space-y-6">
+        <div className="bg-white border border-form-gray-light rounded-lg p-6 shadow-sm">
           {/* Tunnel Shape */}
-          <fieldset className="mb-8">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">トンネル形状</legend>
+          <fieldset>
+            <legend>トンネル形状</legend>
             <div className="space-y-3">
               {tunnelKeizyoList.map((item, index) => (
-                <label key={item.id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
+                <label key={item.id} className="radio-label">
                   <input
                     type="radio"
                     name="tunnelKeizyo"
                     value={item.id}
                     checked={formData.tunnelKeizyo === item.id}
                     onChange={(e) => handleInputChange('tunnelKeizyo', Number(e.target.value))}
-                    className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
+                    className="form-radio"
                   />
                   <span className="text-text-dark">{item.title}</span>
                 </label>
@@ -246,8 +246,8 @@ const InputPage: NextPage = () => {
           </fieldset>
 
           {/* Lining Thickness */}
-          <fieldset className="mb-8">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">覆工巻厚</legend>
+          <fieldset>
+            <legend>覆工巻厚</legend>
             <div className="flex items-center space-x-3">
               <input
                 type="number"
@@ -262,8 +262,8 @@ const InputPage: NextPage = () => {
           </fieldset>
 
           {/* Invert Presence */}
-          <fieldset className="mb-8">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">インバートの有無</legend>
+          <fieldset>
+            <legend>インバートの有無</legend>
             <div className="space-y-3">
               {invertList.map((item, index) => (
                 <label key={item.id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
@@ -284,15 +284,15 @@ const InputPage: NextPage = () => {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-text-dark mb-2">調査・計測結果の条件</h2>
-        <div className="h-0.5 bg-gitlab-green-light" />
+        <h2 className="section-title">調査・計測結果の条件</h2>
+        <div className="section-underline" />
       </div>
 
       <div className="space-y-8">
-        <div className="bg-white border border-form-gray-light rounded-lg p-8 shadow-[0_1px_3px_0_var(--tw-shadow-color)] shadow-form-shadow">
+        <div className="bg-white border border-form-gray-light rounded-lg p-6 shadow-sm">
           {/* Back Cavity */}
-          <fieldset className="mb-6">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">背面空洞の有無</legend>
+          <fieldset>
+            <legend>背面空洞の有無</legend>
             <div className="space-y-3">
               {haimenKudoList.map((item, index) => (
                 <label key={item.id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
@@ -311,8 +311,8 @@ const InputPage: NextPage = () => {
           </fieldset>
 
           {/* Deformation Mode */}
-          <fieldset className="mb-8">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">変形モード</legend>
+          <fieldset>
+            <legend>変形モード</legend>
             <div className="space-y-3">
               {henkeiModeList.map((item, index) => (
                 <label
@@ -339,8 +339,8 @@ const InputPage: NextPage = () => {
           </fieldset>
 
           {/* Ground Strength */}
-          <fieldset className="mb-8">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">地山強度</legend>
+          <fieldset>
+            <legend>地山強度</legend>
             <div className="flex items-center space-x-3">
               <input
                 type="number"
@@ -355,8 +355,8 @@ const InputPage: NextPage = () => {
           </fieldset>
 
           {/* Inner Displacement Speed */}
-          <fieldset className="mb-8">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">内空変位速度, 盤ぶくれ速度</legend>
+          <fieldset>
+            <legend>内空変位速度, 盤ぶくれ速度</legend>
             <div className="flex items-center space-x-3">
               <input
                 type="number"
@@ -374,15 +374,15 @@ const InputPage: NextPage = () => {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-text-dark mb-2">対策工の条件</h2>
-        <div className="h-0.5 bg-gitlab-green-light" />
+        <h2 className="section-title">対策工の条件</h2>
+        <div className="section-underline" />
       </div>
 
       <div className="space-y-8">
-        <div className="bg-white border border-form-gray-light rounded-lg p-8 shadow-[0_1px_3px_0_var(--tw-shadow-color)] shadow-form-shadow">
+        <div className="bg-white border border-form-gray-light rounded-lg p-6 shadow-sm">
           {/* Back Filling Injection */}
-          <fieldset className="mb-6">
-            <legend className="text-lg font-semibold mb-4 text-text-dark">裏込注入工</legend>
+          <fieldset>
+            <legend>裏込注入工</legend>
             <div className="space-y-3">
               {uragomeChunyukoList.map((item, index) => (
                 <label
@@ -453,7 +453,7 @@ const InputPage: NextPage = () => {
                 </div>
               </div>
             ) : (
-              <p className="text-text-dark italic p-2">選択できません</p>
+              <p className="text-disabled-gray text-sm p-2">選択できません</p>
             )}
           </fieldset>
 
@@ -502,7 +502,7 @@ const InputPage: NextPage = () => {
                 </div>
               </div>
             ) : (
-              <p className="text-text-dark italic p-2">選択できません</p>
+              <p className="text-disabled-gray text-sm p-2">選択できません</p>
             )}
           </fieldset>
 
@@ -526,7 +526,7 @@ const InputPage: NextPage = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-text-dark italic p-2">選択できません</p>
+              <p className="text-disabled-gray text-sm p-2">選択できません</p>
             )}
           </fieldset>
         </div>
