@@ -219,83 +219,87 @@ export default function Page() {
   return (
     <div className="container mx-auto px-6 py-6">
       <div>
-        <h2 className="section-title">構造条件</h2>
-        <div className="section-underline" />
+        <h2 className="text-xl font-semibold pb-2 mb-4 border-b-2 border-green-500">構造条件</h2>
       </div>
 
-      <div className="space-y-3">
-        <div className="bg-white p-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {/* Tunnel Shape */}
-            <fieldset className="border border-gray-200 rounded p-3">
-              <legend className="mb-2 font-medium text-sm text-gray-700">トンネル形状</legend>
-              <div className="space-y-1.5">
-                {tunnelKeizyoList.map((item, index) => (
-                  <label key={item.id} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="tunnelKeizyo"
-                      value={item.id}
-                      checked={formData.tunnelKeizyo === item.id}
-                      onChange={(e) => handleInputChange('tunnelKeizyo', Number(e.target.value))}
-                      className="form-radio h-3 w-3 text-gray-700 focus:ring-1 focus:ring-gray-400 border-gray-300"
-                    />
-                    <span className="text-sm text-gray-700">{item.title}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+      <div className="space-y-2">
+        <div className="bg-white p-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-4">
+              {/* Tunnel Shape */}
+              <fieldset>
+                <legend>トンネル形状</legend>
+                <div className="space-y-1.5">
+                  {tunnelKeizyoList.map((item, index) => (
+                    <label key={item.id} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="tunnelKeizyo"
+                        value={item.id}
+                        checked={formData.tunnelKeizyo === item.id}
+                        onChange={(e) => handleInputChange('tunnelKeizyo', Number(e.target.value))}
+                        className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300"
+                      />
+                      <span className="text-sm text-gray-700">{item.title}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
 
-            {/* Lining Thickness */}
-            <fieldset className="border border-gray-200 rounded p-3">
-              <legend className="mb-2 font-medium text-sm text-gray-700">覆工巻厚</legend>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  className="form-input w-20 px-2 py-1 rounded border-gray-300 focus:border-gray-400 focus:ring-1 focus:ring-gray-400 text-gray-700"
-                  value={formData.fukukouMakiatsu}
-                  onChange={(e) => handleInputChange('fukukouMakiatsu', Number(e.target.value))}
-                  min={30}
-                  max={70}
-                />
-                <span className="text-sm text-gray-700">cm</span>
-              </div>
-            </fieldset>
+              {/* Lining Thickness */}
+              <fieldset>
+                <legend>覆工巻厚</legend>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="number"
+                    className="form-input w-20 px-2 py-1 rounded border-gray-300 focus:border-gray-400 focus:ring-1 focus:ring-gray-400 text-gray-700"
+                    value={formData.fukukouMakiatsu}
+                    onChange={(e) => handleInputChange('fukukouMakiatsu', Number(e.target.value))}
+                    min={30}
+                    max={70}
+                  />
+                  <span className="text-sm text-gray-700">cm</span>
+                </div>
+              </fieldset>
 
-            {/* Invert Presence */}
-            <fieldset className="border border-gray-200 rounded p-3">
-              <legend className="mb-2 font-medium text-sm text-gray-700">インバートの有無</legend>
-              <div className="space-y-1.5">
-                {invertList.map((item, index) => (
-                  <label key={item.id} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="invert"
-                      value={item.id}
-                      checked={formData.invert === item.id}
-                      onChange={(e) => handleInputChange('invert', Number(e.target.value))}
-                      className="form-radio h-3 w-3 text-gray-700 focus:ring-1 focus:ring-gray-400 border-gray-300"
-                    />
-                    <span className="text-sm text-gray-700">{item.title}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+              {/* Invert Presence */}
+              <fieldset>
+                <legend>インバートの有無</legend>
+                <div className="space-y-1.5">
+                  {invertList.map((item, index) => (
+                    <label key={item.id} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="invert"
+                        value={item.id}
+                        checked={formData.invert === item.id}
+                        onChange={(e) => handleInputChange('invert', Number(e.target.value))}
+                        className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300"
+                      />
+                      <span className="text-sm text-gray-700">{item.title}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="mb-8">
-        <h2 className="section-title">調査・計測結果の条件</h2>
-        <div className="section-underline" />
+      <div>
+        <h2 className="text-xl font-semibold pb-2 mb-4 border-b-2 border-green-500">調査・計測結果の条件</h2>
+      </div>
+
+      <div>
+        <h2 className="text-xl font-semibold pb-2 mb-4 border-b-2 border-green-500">変状条件</h2>
       </div>
 
       <div className="space-y-4">
         <div className="bg-gray-50 p-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-6">
             {/* Back Cavity */}
-            <fieldset className="border border-gray-200 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">背面空洞の有無</legend>
+            <fieldset>
+              <legend>背面空洞の有無</legend>
               <div className="space-y-3">
                 {haimenKudoList.map((item, index) => (
                   <label key={item.id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
@@ -305,24 +309,24 @@ export default function Page() {
                       value={item.id}
                       checked={formData.haimenKudo === item.id}
                       onChange={(e) => handleInputChange('haimenKudo', Number(e.target.value))}
-                      className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
+                      className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300"
                     />
-                    <span className="text-text-dark">{item.title}</span>
+                    <span className="text-gray-700">{item.title}</span>
                   </label>
                 ))}
               </div>
             </fieldset>
 
             {/* Deformation Mode */}
-            <fieldset className="border border-gray-200 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">変形モード</legend>
+            <fieldset>
+              <legend>変形モード</legend>
               <div className="space-y-3">
                 {henkeiModeList.map((item, index) => (
                   <label
                     key={item.id}
                     className={`flex items-center space-x-3 p-2 ${
                       uiState.henkeiModeStyle[index] !== 'Enable' 
-                        ? 'opacity-40 cursor-not-allowed bg-gray-50' 
+                        ? 'opacity-50 cursor-not-allowed bg-gray-100' 
                         : 'cursor-pointer hover:bg-gray-50'
                     }`}
                   >
@@ -333,7 +337,7 @@ export default function Page() {
                       checked={formData.henkeiMode === item.id}
                       onChange={(e) => handleInputChange('henkeiMode', Number(e.target.value))}
                       disabled={uiState.henkeiModeStyle[index] !== 'Enable'}
-                      className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light disabled:opacity-50"
+                      className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50"
                     />
                     <span className="text-text-dark">{item.title}</span>
                   </label>
@@ -342,12 +346,12 @@ export default function Page() {
             </fieldset>
 
             {/* Ground Strength */}
-            <fieldset className="border border-gray-200 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">地山強度</legend>
+            <fieldset>
+              <legend>地山強度</legend>
               <div className="flex items-center space-x-3">
                 <input
                   type="number"
-                  className="form-input w-32 rounded-md border-form-gray-light focus:border-gitlab-green-light focus:ring-2 focus:ring-gitlab-green-light"
+                  className="form-input w-32 rounded-md border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   value={formData.jiyamaKyodo}
                   onChange={(e) => handleInputChange('jiyamaKyodo', Number(e.target.value))}
                   min={2}
@@ -358,12 +362,12 @@ export default function Page() {
             </fieldset>
 
             {/* Inner Displacement Speed */}
-            <fieldset className="border border-gray-200 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">内空変位速度, 盤ぶくれ速度</legend>
+            <fieldset>
+              <legend>内空変位速度, 盤ぶくれ速度</legend>
               <div className="flex items-center space-x-3">
                 <input
                   type="number"
-                  className="form-input w-40 rounded-md border-form-gray-light focus:border-gitlab-green-light focus:ring-2 focus:ring-gitlab-green-light"
+                  className="form-input w-40 rounded-md border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   value={formData.naikuHeniSokudo}
                   onChange={(e) => handleInputChange('naikuHeniSokudo', Number(e.target.value))}
                 />
@@ -377,24 +381,24 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-4">
         <h2 className="section-title">対策工の条件</h2>
         <div className="section-underline" />
       </div>
 
       <div className="space-y-4">
         <div className="bg-gray-50 p-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             {/* Back Filling Injection */}
-            <fieldset className="border border-gray-200 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">裏込注入工</legend>
+            <fieldset>
+              <legend>裏込注入工</legend>
               <div className="space-y-3">
                 {uragomeChunyukoList.map((item, index) => (
                   <label
                     key={item.id}
                     className={`flex items-center space-x-3 p-2 ${
                       uiState.uragomeChunyukoStyle[index] !== 'Enable' 
-                        ? 'opacity-40 cursor-not-allowed bg-gray-50' 
+                        ? 'opacity-50 cursor-not-allowed bg-gray-100' 
                         : 'cursor-pointer hover:bg-gray-50'
                     }`}
                   >
@@ -405,7 +409,7 @@ export default function Page() {
                       checked={formData.uragomeChunyuko === item.id}
                       onChange={(e) => handleInputChange('uragomeChunyuko', Number(e.target.value))}
                       disabled={uiState.uragomeChunyukoStyle[index] !== 'Enable'}
-                      className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light disabled:opacity-50"
+                      className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                     <span className="text-text-dark">{item.title}</span>
                   </label>
@@ -413,9 +417,13 @@ export default function Page() {
               </div>
             </fieldset>
 
+            <div>
+              <h2 className="text-xl font-semibold pb-2 mb-4 border-b-2 border-green-500">対策工</h2>
+            </div>
+
             {/* Rock Bolt Work */}
-            <fieldset className="border border-gray-200 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">ロックボルト工</legend>
+            <fieldset>
+              <legend>ロックボルト工</legend>
               {!uiState.henkeiMode4Flag ? (
                 <div className="space-y-3">
                   {lockBoltKouList.map((item, index) => (
@@ -426,9 +434,9 @@ export default function Page() {
                         value={item.id}
                         checked={formData.lockBoltKou === item.id}
                         onChange={(e) => handleInputChange('lockBoltKou', Number(e.target.value))}
-                        className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
+                        className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
-                      <span className="text-text-dark">{item.title}</span>
+                      <span className="text-gray-700">{item.title}</span>
                     </label>
                   ))}
                 </div>
@@ -438,8 +446,8 @@ export default function Page() {
             </fieldset>
 
             {/* Downward Rock Bolt Work */}
-            <fieldset className="border border-gray-200 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">ロックボルト工（下向き）</legend>
+            <fieldset>
+              <legend>ロックボルト工（下向き）</legend>
               {uiState.downwardLockBoltEnable ? (
                 <div className="space-y-3">
                   {downwardLockBoltKouList.map((item, index) => (
@@ -450,7 +458,7 @@ export default function Page() {
                         value={item.id}
                         checked={formData.downwardLockBoltKou === item.id}
                         onChange={(e) => handleInputChange('downwardLockBoltKou', Number(e.target.value))}
-                        className="form-radio h-4 w-4 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
+                        className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                       <span className="text-text-dark">{item.title}</span>
                     </label>
@@ -462,8 +470,8 @@ export default function Page() {
             </fieldset>
 
             {/* Inner Reinforcement */}
-            <fieldset className="border border-gray-200 rounded p-4">
-              <legend className="mb-3 font-medium text-sm text-gray-800">内巻補強</legend>
+            <fieldset>
+              <legend>内巻補強</legend>
               {!uiState.henkeiMode4Flag ? (
                 <div className="space-y-3">
                   {uchimakiHokyoList.map((item, index) => (
@@ -474,7 +482,7 @@ export default function Page() {
                         value={item.id}
                         checked={formData.uchimakiHokyo === item.id}
                         onChange={(e) => handleInputChange('uchimakiHokyo', Number(e.target.value))}
-                        className="form-radio h-5 w-5 text-gitlab-green-dark focus:ring-2 focus:ring-gitlab-green-light"
+                        className="form-radio h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                       <span className="text-text-dark">{item.title}</span>
                     </label>
