@@ -155,10 +155,6 @@ export default function Page() {
         <h2 className="text-xl font-semibold pb-2 mb-4 border-b-2 border-green-500">調査・計測結果の条件</h2>
       </div>
 
-      <div>
-        <h2 className="text-xl font-semibold pb-2 mb-4 border-b-2 border-green-500">変状条件</h2>
-      </div>
-
       <div className="space-y-4">
         <div className="bg-gray-50 p-4">
           <div className="grid grid-cols-4 gap-6">
@@ -281,10 +277,6 @@ export default function Page() {
                 ))}
               </div>
             </fieldset>
-
-            <div>
-              <h2 className="text-xl font-semibold pb-2 mb-4 border-b-2 border-green-500">対策工</h2>
-            </div>
 
             {/* Rock Bolt Work */}
             <fieldset>
