@@ -238,13 +238,14 @@ export default function InputPage() {
             <fieldset>
               <legend>裏込注入工</legend>
               {uragomeChunyukoList.map((x) => (
-                <div key={x.id}>
+                <div key={x.id} className={data.uragomeChunyukoStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
                   <label>
                     <input
                       type="radio"
                       name="uragomeChunyuko"
                       checked={data.uragomeChunyuko === x.id}
                       onChange={() => handleChange('uragomeChunyuko', x.id)}
+                      disabled={data.uragomeChunyukoStyle?.[x.id] !== 'Enable'}
                     />
                     {x.title}
                   </label>
@@ -338,13 +339,14 @@ export default function InputPage() {
               <legend>内巻補強</legend>
               {!data.henkeiMode4Flag ? (
                 uchimakiHokyoList.map((x) => (
-                  <div key={x.id}>
+                  <div key={x.id} className={data.uchimakiHokyoStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
                     <label>
                       <input
                         type="radio"
                         name="uchimakiHokyo"
                         checked={data.uchimakiHokyo === x.id}
                         onChange={() => handleChange('uchimakiHokyo', x.id)}
+                        disabled={data.uchimakiHokyoStyle?.[x.id] !== 'Enable'}
                       />
                       {x.title}
                     </label>

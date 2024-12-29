@@ -16,6 +16,15 @@ export interface InputData {
   downwardLockBoltLength: number; // ロックボルト長（下向き）
   uchimakiHokyo: number;       // 内巻補強
   MonitoringData: string;      // モニタリングデータ
+
+  // Style and conditional flags
+  henkeiMode4Flag: boolean;    // 盤ぶくれモード
+  downwardLockBoltEnable: boolean; // 下向きロックボルト有効
+  henkeiModeStyle: { [key: number]: string }; // 変形モードスタイル
+  uragomeChunyukoStyle: { [key: number]: string }; // 裏込注入工スタイル
+  lockBoltLengthStyle: { [key: number]: string }; // ロックボルト長スタイル
+  downwardLockBoltLengthStyle: string; // 下向きロックボルト長スタイル
+  uchimakiHokyoStyle: { [key: number]: string }; // 内巻補強スタイル
 }
 
 export class InputDataService {
@@ -35,7 +44,16 @@ export class InputDataService {
     downwardLockBoltKou: 0,
     downwardLockBoltLength: 4,
     uchimakiHokyo: 0,
-    MonitoringData: ''
+    MonitoringData: '',
+
+    // Initialize style and conditional flags
+    henkeiMode4Flag: false,
+    downwardLockBoltEnable: true,
+    henkeiModeStyle: { 1: 'Enable', 2: 'Enable', 3: 'Enable', 4: 'Enable' },
+    uragomeChunyukoStyle: { 0: 'Enable', 1: 'Enable' },
+    lockBoltLengthStyle: { 3: 'Enable', 4: 'Enable', 6: 'Enable', 8: 'Enable' },
+    downwardLockBoltLengthStyle: 'Enable',
+    uchimakiHokyoStyle: { 0: 'Enable', 1: 'Enable' }
   };
 
   private data: any;

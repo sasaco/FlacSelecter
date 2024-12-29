@@ -105,13 +105,13 @@ input[type="radio"] {
   margin-left: 1rem;
 }
 
-.Disable {
+.Disable, .is-disabled {
   color: #999;
   pointer-events: none;
   background-color: #666666;
 }
 
-.Disable input {
+.Disable input, .is-disabled input {
   opacity: 0.5;
   cursor: not-allowed;
   background-color: var(--disabled-background-color);
