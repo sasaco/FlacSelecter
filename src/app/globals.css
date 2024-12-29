@@ -3,63 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --background-rgb: 249, 250, 251;
-  --header-bg: #2B2B2B;
-  --header-border: #424242;
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 body {
-  background: rgb(var(--background-rgb));
-  color: #333;
-}
-
-@layer components {
-  .form-radio {
-    @apply h-4 w-4 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
-  
-  input[type="number"] {
-    @apply w-20 px-2 py-1 rounded-md border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500 text-gray-700 disabled:bg-gray-100 disabled:opacity-50;
-  }
-
-  fieldset {
-    @apply border border-gray-300 rounded-md p-3 bg-white;
-  }
-
-  fieldset legend {
-    @apply text-sm font-medium text-gray-700 px-2;
-  }
-
-  label {
-    @apply flex items-center space-x-3 cursor-pointer text-sm text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
-
-  h2 {
-    @apply text-xl font-semibold pb-2 mb-4 border-b-2 border-green-500;
-  }
-
-  .disabled-label {
-    @apply opacity-50 cursor-not-allowed bg-gray-100;
-  }
-
-  .enabled-label {
-    @apply cursor-pointer hover:bg-gray-50;
-  }
-
-  /* Header styles */
-  header {
-    @apply bg-[var(--header-bg)] text-white border-b border-[var(--header-border)];
-  }
-
-  nav {
-    @apply bg-white border-b border-gray-200 mb-6;
-  }
-
-  nav a {
-    @apply inline-block px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:border-b-2 hover:border-green-500;
-  }
-
-  nav a.active {
-    @apply text-green-600 border-b-2 border-green-500;
-  }
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
 }
