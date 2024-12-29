@@ -37,8 +37,16 @@ export default function RootLayout({
             </div>
           </div>
         </header>
-        <Navigation />
-        {children}
+        <div className="app-root">
+          <div className="container">
+            <div className="page-selector">
+              <Navigation />
+            </div>
+            <main>
+              {children}
+            </main>
+          </div>
+        </div>
       </body>
     </html>
   );
