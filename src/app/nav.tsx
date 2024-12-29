@@ -20,14 +20,16 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
           </div>
         </div>
       </header>
-      <nav className="nav-container">
+      <div className="nav-container">
         <div className="container">
           <div className="page-selector">
-            <Link href="/input-page" className={pathname === '/input-page' ? 'is-active' : ''}>条件の設定</Link>
-            <Link href="/output-page" className={pathname === '/output-page' ? 'is-active' : ''}>結果</Link>
+            <nav>
+              <Link href="/input-page" className={pathname === '/input-page' ? 'is-active' : ''}>条件の設定</Link>
+              <Link href="/output-page" className={pathname === '/output-page' ? 'is-active' : ''}>結果</Link>
+            </nav>
           </div>
         </div>
-      </nav>
+      </div>
       {children}
     </>
   );
