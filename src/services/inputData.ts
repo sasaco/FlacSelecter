@@ -69,7 +69,7 @@ export class InputDataService {
       
       // Client-side - load CSV
       console.log('Running in browser mode - Loading CSV from public assets');
-      fetch('/assets/data.csv')
+      fetch('/data.csv')
         .then((response: Response) => {
           if (!response.ok) {
             console.error(`HTTP error! status: ${response.status}`);

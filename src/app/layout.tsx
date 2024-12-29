@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navigation from "./nav";
+import Template from './template';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,35 +20,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="ja">
+    <html lang="ja" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <div className="app-root">
-          <header className="header">
-            <div className="container">
-              <div className="liner">
-                <img src="/img/logo.png" alt="Logo" />
-                <div className="title-and-version">
-                  <h1>変状対策工設計ツール</h1>
-                  <div>Ver.2.1.1</div>
-                </div>
-              </div>
-            </div>
-          </header>
-          <div>
-            <div className="container">
-              <div className="page-selector">
-                <Navigation />
-              </div>
-            </div>
-            <main>
-              {children}
-            </main>
-          </div>
-        </div>
+        <Template>{children}</Template>
       </body>
     </html>
   );
