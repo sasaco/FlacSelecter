@@ -359,9 +359,6 @@ export default function InputPage() {
           </fieldset>
         </div>
       </div>
-      <div className="submit-container">
-        <button type="submit" className="submit-button">計算する</button>
-      </div>
     </form>
     </div>
   );
