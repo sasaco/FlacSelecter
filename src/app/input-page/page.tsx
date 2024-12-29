@@ -1,8 +1,10 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { InputData, InputDataService } from '../services/inputData';
-import { setEnable } from '../utils/setEnable';
-import '../styles/input-page.css';
+import { useRouter } from 'next/navigation';
+import { InputData, InputDataService } from '../../services/inputData';
+import { setEnable } from '../../utils/setEnable';
+import '../../styles/input-page.css';
 
 export default function InputPage() {
   const router = useRouter();
@@ -56,7 +58,7 @@ export default function InputPage() {
   ];
 
   const handleChange = (field: keyof InputData, value: number) => {
-    setData(prev => ({ ...prev, [field]: value }));
+    setData((prev: InputData) => ({ ...prev, [field]: value }));
   };
 
   useEffect(() => {
