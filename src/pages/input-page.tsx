@@ -64,12 +64,7 @@ export default function InputPage() {
   }, [data]);
 
   return (
-    <form className="page-container" onSubmit={async (e) => {
-      e.preventDefault();
-      inputService.Data = data;
-      localStorage.setItem('inputData', JSON.stringify(data));
-      await router.push('/output-page');
-    }}>
+    <form className="page-container">
       <div className="container">
         <div className="section-title">
           <h2 className="section-title">構造条件</h2>
@@ -242,9 +237,6 @@ export default function InputPage() {
             ))}
           </div>
         </fieldset>
-      </div>
-      <div className="submit-container">
-        <button type="submit" className="submit-button">計算する</button>
       </div>
     </form>
   );
