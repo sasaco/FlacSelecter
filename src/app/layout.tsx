@@ -38,10 +38,16 @@ export default function RootLayout({
               </div>
             </div>
           </header>
-          <Navigation />
-          <main>
-            {children}
-          </main>
+          <div>
+            <div className="container">
+              <div className="page-selector">
+                <Navigation />
+              </div>
+            </div>
+            <main>
+              {children}
+            </main>
+          </div>
         </div>
       </body>
     </html>
