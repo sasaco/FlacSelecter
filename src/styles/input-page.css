@@ -1,47 +1,80 @@
+:root {
+  --border-color: #70ad47;
+  --primary-color: #507e32;
+  --primary-color-light: #99c184;
+  --disabled-background-color: #808080;
+}
+
 .page-container {
   width: 100%;
   min-height: 100vh;
   padding: 20px 0;
   margin: 0;
   border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.section-title {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.divider {
-  height: 2px;
-  background-color: #ccc;
-  margin: 10px 0;
+  padding: 0 2rem;
 }
 
 .conditions {
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+}
+
+.section-title h2 {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin-right: 0.5rem;
+}
+
+.divider {
+  border-bottom: 1px solid var(--border-color);
+  flex: 1 0 auto;
 }
 
 .liner {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
+
+.condition-container {
+  position: relative;
+  border: 1px solid black;
+  padding: 2rem 1rem 1rem;
+  min-width: 10rem;
+  margin-right: 1rem;
+}
+
+.condition-container .condition-name {
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  background: white;
+  padding: 0 0.5rem;
+}
+
+.lockbolt {
+  display: flex;
+}
+
+.lockbolt > *:first-child {
+  margin-right: 1rem;
+}
+
 
 fieldset {
   border: 1px solid #ccc;
   padding: 15px;
-  margin: 0;
+  margin: 0 0 1rem 0;
   border-radius: 4px;
+  flex: 1;
 }
+
 
 legend {
   padding: 0 10px;
@@ -69,17 +102,23 @@ input[type="radio"] {
 }
 
 .margin-left {
-  margin-left: 20px;
+  margin-left: 1rem;
 }
 
 .Disable {
   color: #999;
   pointer-events: none;
+  background-color: #666666;
 }
 
 .Disable input {
   opacity: 0.5;
   cursor: not-allowed;
+  background-color: var(--disabled-background-color);
+}
+
+p {
+  color: #ccc;
 }
 
 button {
@@ -113,7 +152,7 @@ pre {
 .submit-button {
   padding: 0.75rem 2rem;
   font-size: 1.1rem;
-  background-color: #007bff;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -122,5 +161,5 @@ pre {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-color-light);
 }
