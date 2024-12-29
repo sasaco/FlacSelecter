@@ -84,8 +84,7 @@ export default function InputPage() {
   };
 
   return (
-    <div className="page-container">
-      <form onSubmit={async (e: FormEvent) => {
+    <form onSubmit={async (e: FormEvent) => {
         e.preventDefault();
         inputService.Data = data;
         localStorage.setItem('inputData', JSON.stringify(data));
@@ -355,6 +354,5 @@ export default function InputPage() {
         </div>
       </div>
     </form>
-    </div>
   );
 }

@@ -162,8 +162,7 @@ export default function OutputPage() {
   }, []);
 
   return (
-    <div className="page-container">
-      <div className="result">
+    <div className="result">
         <div className="conditions-summary">
           <div className="line">
             <div className="condition-name">構造条件</div>:
@@ -234,6 +233,5 @@ export default function OutputPage() {
           </div>
         )}
       </div>
-    </div>
   );
 }

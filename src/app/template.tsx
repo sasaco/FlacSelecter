@@ -13,26 +13,17 @@ export default function Template({
   
   return (
     <>
-      <header className="header">
+      <div>
         <div className="container">
-          <div className="liner">
-            <img src="/img/logo.png" alt="Logo" />
-            <div className="title-and-version">
-              <h1>変状対策工設計ツール</h1>
-              <div>Ver.2.1.1</div>
-            </div>
+          <div className="page-selector">
+            <nav>
+              <Link href="/input-page" className={pathname === '/input-page' ? 'is-active' : ''}>条件の設定</Link>
+              <Link href="/output-page" className={pathname === '/output-page' ? 'is-active' : ''}>結果</Link>
+            </nav>
           </div>
         </div>
-      </header>
-      <div className="container">
-        <div className="page-selector">
-          <nav>
-            <Link href="/input-page" className={pathname === '/input-page' ? 'is-active' : ''}>条件の設定</Link>
-            <Link href="/output-page" className={pathname === '/output-page' ? 'is-active' : ''}>結果</Link>
-          </nav>
-        </div>
+        {children}
       </div>
-      {children}
     </>
   );
 }
