@@ -5,8 +5,6 @@ import "./globals.css";
 import { metadata } from "./metadata";
 import { Providers } from "./providers";
 
-import Template from './template';
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,9 +23,7 @@ export default function RootLayout({
   return (
     <html lang="jp">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} >
-        <Template>
-          <Providers>{children}</Providers>
-        </Template>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
