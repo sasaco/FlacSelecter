@@ -85,13 +85,6 @@ export default function InputPage() {
 
   return (
     <div className="page-container">
-      <div className="header">
-        <img src="/img/logo.png" alt="Logo" />
-        <div>
-          <h1>変状対策工設計ツール</h1>
-          <span className="version">Ver.2.1.1</span>
-        </div>
-      </div>
       <form onSubmit={async (e: FormEvent) => {
         e.preventDefault();
         inputService.Data = data;
