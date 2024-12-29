@@ -45,7 +45,14 @@ body {
   margin-right: 1rem;
 }
 
+:root {
+  --nav-height: 48px;
+}
+
 .nav-container {
+  display: block;
+  width: 100%;
+  min-height: var(--nav-height);
   background-color: var(--background);
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 2rem;
@@ -53,30 +60,36 @@ body {
 
 .page-selector {
   display: flex;
-  gap: 2rem;
-  padding: 0.5rem 0;
+  align-items: center;
+  height: var(--nav-height);
+  margin: 0;
 }
 
 .page-selector a {
-  color: var(--primary-color);
+  color: var(--text-color);
   text-decoration: none;
-  padding: 0.5rem 0;
+  padding: 0 1.5rem;
   font-size: 1rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
   position: relative;
+  transition: color 0.2s ease;
 }
 
 .page-selector a:hover {
-  color: var(--primary-color-light);
+  color: var(--primary-color);
 }
 
 .page-selector a.is-active {
   color: var(--primary-color);
+  font-weight: 500;
 }
 
 .page-selector a.is-active::after {
   content: '';
   position: absolute;
-  bottom: -1px;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 2px;
