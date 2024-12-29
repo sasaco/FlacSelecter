@@ -73,9 +73,37 @@ export default function InputPage() {
     setData(prev => ({ ...prev, [field]: value }));
   };
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    setEnable(data);
-  }, [data]);
+    // Initialize state on mount
+    const enableState = setEnable(data);
+    setData(prev => ({
+      ...prev,
+      henkeiMode4Flag: enableState.henkeiMode4Flag,
+      henkeiModeStyle: enableState.henkeiModeStyle,
+      uragomeChunyukoStyle: enableState.uragomeChunyukoStyle,
+      lockBoltLengthStyle: enableState.lockBoltLengthStyle,
+      downwardLockBoltLengthStyle: enableState.downwardLockBoltLengthStyle,
+      uchimakiHokyoStyle: enableState.uchimakiHokyoStyle
+    }));
+    setMounted(true);
+  }, []); // Run only on mount
+
+  useEffect(() => {
+    if (mounted) {
+      const enableState = setEnable(data);
+      setData(prev => ({
+        ...prev,
+        henkeiMode4Flag: enableState.henkeiMode4Flag,
+        henkeiModeStyle: enableState.henkeiModeStyle,
+        uragomeChunyukoStyle: enableState.uragomeChunyukoStyle,
+        lockBoltLengthStyle: enableState.lockBoltLengthStyle,
+        downwardLockBoltLengthStyle: enableState.downwardLockBoltLengthStyle,
+        uchimakiHokyoStyle: enableState.uchimakiHokyoStyle
+      }));
+    }
+  }, [mounted, data.tunnelKeizyo, data.henkeiMode, data.lockBoltKou, data.downwardLockBoltKou]);
 
   return (
     <div>
@@ -338,20 +366,23 @@ export default function InputPage() {
             <fieldset>
               <legend>内巻補強</legend>
               {!data.henkeiMode4Flag ? (
-                uchimakiHokyoList.map((x) => (
-                  <div key={x.id} className={data.uchimakiHokyoStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
-                    <label>
-                      <input
-                        type="radio"
-                        name="uchimakiHokyo"
-                        checked={data.uchimakiHokyo === x.id}
-                        onChange={() => handleChange('uchimakiHokyo', x.id)}
-                        disabled={data.uchimakiHokyoStyle?.[x.id] !== 'Enable'}
-                      />
-                      {x.title}
-                    </label>
-                  </div>
-                ))
+                uchimakiHokyoList.map((x) => {
+                  const isDisabled = !mounted || data.uchimakiHokyoStyle?.[x.id] !== 'Enable';
+                  return (
+                    <div key={x.id} className={isDisabled ? 'Disable' : ''}>
+                      <label>
+                        <input
+                          type="radio"
+                          name="uchimakiHokyo"
+                          checked={data.uchimakiHokyo === x.id}
+                          onChange={() => handleChange('uchimakiHokyo', x.id)}
+                          disabled={isDisabled}
+                        />
+                        {x.title}
+                      </label>
+                    </div>
+                  );
+                })
               ) : (
                 <p>選択できません</p>
               )}
