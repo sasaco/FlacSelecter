@@ -4,10 +4,19 @@ import { InputData, InputDataService } from '../services/inputData';
 import { setEnable } from '../utils/setEnable';
 import '../styles/input-page.css';
 
+// Add type declarations for event handlers
+type FormEvent = React.FormEvent<HTMLFormElement>;
+type InputEvent = React.ChangeEvent<HTMLInputElement>;
+
 export default function InputPage() {
   const router = useRouter();
   const inputService = new InputDataService();
   const [data, setData] = useState<InputData>(inputService.Data);
+  const [enableState, setEnableState] = useState(setEnable(data));
+
+  useEffect(() => {
+    setEnableState(setEnable(data));
+  }, [data]);
 
   const tunnelKeizyoList = [
     { id: 1, title: '単線' },
@@ -55,16 +64,12 @@ export default function InputPage() {
     { id: 1, title: 'あり' },
   ];
 
-  const handleChange = (field: keyof InputData, value: number) => {
-    setData(prev => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof InputData, value: number): void => {
+    setData((prev: InputData) => ({ ...prev, [field]: value }));
   };
 
-  useEffect(() => {
-    setEnable(data);
-  }, [data]);
-
   return (
-    <form className="page-container" onSubmit={async (e) => {
+    <form className="page-container" onSubmit={async (e: FormEvent) => {
       e.preventDefault();
       inputService.Data = data;
       localStorage.setItem('inputData', JSON.stringify(data));
@@ -101,7 +106,7 @@ export default function InputPage() {
               <input
                 type="number"
                 value={data.fukukouMakiatsu}
-                onChange={(e) => handleChange('fukukouMakiatsu', Number(e.target.value))}
+                onChange={(e: InputEvent) => handleChange('fukukouMakiatsu', Number(e.target.value))}
                 style={{ width: '65px', textAlign: 'center' }}
                 min="30"
                 max="70"
@@ -162,6 +167,7 @@ export default function InputPage() {
                     type="radio"
                     checked={data.henkeiMode === x.id}
                     onChange={() => handleChange('henkeiMode', x.id)}
+                    disabled={enableState.henkeiModeStyle[x.id - 1] !== 'Enable'}
                   />
                   {x.title}
                 </label>
@@ -175,7 +181,7 @@ export default function InputPage() {
               <input
                 type="number"
                 value={data.jiyamaKyodo}
-                onChange={(e) => handleChange('jiyamaKyodo', Number(e.target.value))}
+                onChange={(e: InputEvent) => handleChange('jiyamaKyodo', Number(e.target.value))}
                 style={{ width: '65px', textAlign: 'center' }}
                 min="2"
                 max="8"
@@ -190,7 +196,7 @@ export default function InputPage() {
               <input
                 type="number"
                 value={data.naikuHeniSokudo}
-                onChange={(e) => handleChange('naikuHeniSokudo', Number(e.target.value))}
+                onChange={(e: InputEvent) => handleChange('naikuHeniSokudo', Number(e.target.value))}
                 style={{ width: '65px', textAlign: 'center' }}
               />
               mm/年
@@ -217,6 +223,7 @@ export default function InputPage() {
                     type="radio"
                     checked={data.uragomeChunyuko === x.id}
                     onChange={() => handleChange('uragomeChunyuko', x.id)}
+                    disabled={enableState.uragomeChunyukoStyle[x.id] !== 'Enable'}
                   />
                   {x.title}
                 </label>
@@ -235,6 +242,7 @@ export default function InputPage() {
                         type="radio"
                         checked={data.lockBoltKou === x.id}
                         onChange={() => handleChange('lockBoltKou', x.id)}
+                        disabled={enableState.henkeiMode4Flag}
                       />
                       {x.title}
                     </label>
@@ -245,8 +253,9 @@ export default function InputPage() {
                 <input
                   type="number"
                   value={data.lockBoltLength}
-                  onChange={(e) => handleChange('lockBoltLength', Number(e.target.value))}
+                  onChange={(e: InputEvent) => handleChange('lockBoltLength', Number(e.target.value))}
                   style={{ width: '65px', textAlign: 'center' }}
+                  disabled={data.lockBoltKou === 0}
                 />
                 m
               </div>
@@ -264,6 +273,7 @@ export default function InputPage() {
                         type="radio"
                         checked={data.downwardLockBoltKou === x.id}
                         onChange={() => handleChange('downwardLockBoltKou', x.id)}
+                        disabled={!enableState.downwardLockBoltEnable}
                       />
                       {x.title}
                     </label>
@@ -274,8 +284,9 @@ export default function InputPage() {
                 <input
                   type="number"
                   value={data.downwardLockBoltLength}
-                  onChange={(e) => handleChange('downwardLockBoltLength', Number(e.target.value))}
+                  onChange={(e: InputEvent) => handleChange('downwardLockBoltLength', Number(e.target.value))}
                   style={{ width: '65px', textAlign: 'center' }}
+                  disabled={enableState.downwardLockBoltLengthStyle !== 'Enable'}
                 />
                 m
               </div>
@@ -291,6 +302,7 @@ export default function InputPage() {
                     type="radio"
                     checked={data.uchimakiHokyo === x.id}
                     onChange={() => handleChange('uchimakiHokyo', x.id)}
+                    disabled={enableState.henkeiMode4Flag}
                   />
                   {x.title}
                 </label>
@@ -298,7 +310,6 @@ export default function InputPage() {
             ))}
           </fieldset>
         </div>
-      </div>
       </div>
       <div className="submit-container">
         <button type="submit" className="submit-button">計算する</button>
