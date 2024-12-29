@@ -166,31 +166,30 @@ export default function OutputPage() {
       <div className="result">
         <div className="conditions-summary">
           <div className="line">
-            <span className="condition-name">構造条件:</span>
-            <span className="content">{inputString1}</span>
+            <div className="condition-name">構造条件</div>:
+            <div className="content">{inputString1}</div>
           </div>
           <div className="line">
-            <span className="condition-name">調査・計測結果:</span>
-            <span className="content">{inputString2}</span>
+            <div className="condition-name">調査・計測結果</div>:
+            <div className="content">{inputString2}</div>
           </div>
           <div className="line">
-            <span className="condition-name">対策工条件:</span>
-            <span className="content">{inputString3}</span>
+            <div className="condition-name">対策工条件</div>:
+            <div className="content">{inputString3}</div>
           </div>
         </div>
         <div className="result-numbers">
           <div>
             <div>対策後の予測内空変位速度</div>
             <div className="number">
-              <div className="number-box">{displacement}</div>
-              <div>mm/年</div>
+              <span className="number-box">{displacement}</span>
+              mm/年
             </div>
           </div>
           <div>
             <div>変位抑制効果</div>
             <div className="number">
-              <div className="number-box">{effection}</div>
-              <div>％</div>
+              <span className="number-box">{effection}</span>％
             </div>
           </div>
         </div>
@@ -199,11 +198,19 @@ export default function OutputPage() {
             <div>【対策工なし】</div>
             {imgString0 && (
               <img 
+                id="outputimage"
                 src={`/img/${imgString0}.png`} 
                 alt="対策工なし"
                 onError={(e) => {
-                  console.error('Image load error:', e);
+                  console.error(`Image load error for 対策工なし (${imgString0}.png):`, e);
                   e.currentTarget.style.display = 'none';
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'image-error';
+                    errorDiv.textContent = '画像が見つかりません';
+                    parent.appendChild(errorDiv);
+                  }
                 }}
               />
             )}
@@ -212,19 +219,27 @@ export default function OutputPage() {
             <div>【対策工あり】</div>
             {imgString1 && (
               <img 
+                id="outputimage"
                 src={`/img/${imgString1}.png`} 
                 alt="対策工あり"
                 onError={(e) => {
-                  console.error('Image load error:', e);
+                  console.error(`Image load error for 対策工あり (${imgString1}.png):`, e);
                   e.currentTarget.style.display = 'none';
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'image-error';
+                    errorDiv.textContent = '画像が見つかりません';
+                    parent.appendChild(errorDiv);
+                  }
                 }}
               />
             )}
           </div>
         </div>
-        {alertString && (
-          <div className="alert">{alertString}</div>
-        )}
+        <div className='alert'>
+          <div>{alertString}</div>
+        </div>
       </div>
     </div>
   );

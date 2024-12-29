@@ -54,12 +54,10 @@
 }
 
 .number-box {
-  border: 2px solid var(--border-color);
-  padding: 0.5rem 1.5rem;
+  border: 1px solid black;
   font-size: 1.5rem;
-  min-width: 4rem;
-  text-align: center;
-  background: white;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
 }
 
 .images {
@@ -80,19 +78,21 @@
   text-align: center;
 }
 
+.image-error {
+  color: #ff0000;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 #outputimage {
-  width: 100%;
-  height: auto;
-  border: 2px solid var(--border-color);
-  padding: 1rem;
-  background: white;
-  box-sizing: border-box;
+  width: 350px;
+  height: 350px;
+  object-fit: cover;
+  object-position: -116px;
 }
 
 .alert {
-  margin-top: 2rem;
-  color: var(--alert-color);
-  font-size: 0.9rem;
-  font-style: italic;
+  color: #aa0000;
   text-align: center;
 }

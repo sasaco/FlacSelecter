@@ -337,7 +337,7 @@ export default function InputPage() {
                 </div>
               </div>
             ) : (
-              <p className="disabled-text">選択できません</p>
+              <p>選択できません</p>
             )}
           </fieldset>
 

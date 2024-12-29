@@ -1,13 +1,12 @@
 :root {
-  --border-color: #70ad47;
-  --primary-color: #507e32;
-  --primary-color-light: #99c184;
-  --disabled-background-color: #808080;
+  --border-color: #70ad47; /* ボーダーライン */
+  --primary-color: #507e32; /* ボタン濃い */
+  --primary-color-light: #99c184; /* ボタン薄い */
+  --disabled-background-color: #808080; /* 無効なINPUTの背景色 */
   --text-disabled: #666666;
   --disabled-text-color: #ccc;
   --background: #ffffff;
   --foreground: #171717;
-  --fieldset-border-color: #70ad47;
 }
 
 body {
