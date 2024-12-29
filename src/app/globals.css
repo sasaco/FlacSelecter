@@ -70,7 +70,6 @@ main {
 
 .page-selector nav {
   display: flex;
-  gap: 4px;
   width: 100%;
 }
 
@@ -79,10 +78,10 @@ main {
   height: 32px;
   width: 150px;
   padding: 10px;
+  margin-right: 4px;
   color: khaki;
   background: var(--primary-color);
   justify-content: center;
-  align-items: center;
   text-decoration: none;
   float: left;
 }
