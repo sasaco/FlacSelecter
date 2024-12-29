@@ -72,7 +72,10 @@ export default function InputPage() {
   }, [data]);
 
   return (
-    <form className="page-container">
+    <form className="page-container" onSubmit={(e) => {
+        e.preventDefault();
+        router.push('/output-page');
+      }}>
       <div className="container">
         <div className="section-title">
           <h2 className="section-title">構造条件</h2>
@@ -245,6 +248,9 @@ export default function InputPage() {
             ))}
           </div>
         </fieldset>
+      </div>
+      <div className="submit-container">
+        <button type="submit" className="submit-button">計算する</button>
       </div>
     </form>
   );
