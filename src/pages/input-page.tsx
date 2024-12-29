@@ -55,6 +55,20 @@ export default function InputPage() {
     { id: 1, title: 'あり' },
   ];
 
+  const lockBoltLengthList = [
+    { id: 3, title: '3m' },
+    { id: 6, title: '6m' },
+    { id: 4, title: '4m' },
+    { id: 8, title: '8m' },
+  ];
+
+  const downwardLockBoltLengthList = [
+    { id: 3, title: '3m' },
+    { id: 6, title: '6m' },
+    { id: 4, title: '4m' },
+    { id: 8, title: '8m' },
+  ];
+
   const handleChange = (field: keyof InputData, value: number) => {
     setData(prev => ({ ...prev, [field]: value }));
   };
@@ -64,188 +78,289 @@ export default function InputPage() {
   }, [data]);
 
   return (
-    <form className="page-container" onSubmit={async (e) => {
-      e.preventDefault();
-      inputService.Data = data;
-      localStorage.setItem('inputData', JSON.stringify(data));
-      await router.push('/output-page');
-    }}>
-      <div className="container">
-        <div className="section-title">
-          <h2 className="section-title">構造条件</h2>
-          <div className="divider"></div>
+    <div>
+      <form className="page-container" onSubmit={async (e) => {
+        e.preventDefault();
+        inputService.Data = data;
+        localStorage.setItem('inputData', JSON.stringify(data));
+        await router.push('/output-page');
+      }}>
+        {/* 構造条件 */}
+        <div className="container">
+          <div className="section-title">
+            <h2 className="section-title">構造条件</h2>
+            <div className="divider"></div>
+          </div>
         </div>
 
-        <fieldset>
-          <div>
-            <label>トンネル形状</label>
-            {tunnelKeizyoList.map((x) => (
-              <label key={x.id}>
+        <div className="container conditions">
+          <div className="liner">
+            <fieldset>
+              <legend>トンネル形状</legend>
+              {tunnelKeizyoList.map((x) => (
+                <div key={x.id}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="tunnelKeizyo"
+                      checked={data.tunnelKeizyo === x.id}
+                      onChange={() => handleChange('tunnelKeizyo', x.id)}
+                    />
+                    {x.title}
+                  </label>
+                </div>
+              ))}
+            </fieldset>
+
+            <fieldset>
+              <legend>覆工巻厚</legend>
+              <div id="textbox">
                 <input
-                  type="radio"
-                  checked={data.tunnelKeizyo === x.id}
-                  onChange={() => handleChange('tunnelKeizyo', x.id)}
+                  type="number"
+                  name="fukukouMakiatsu"
+                  value={data.fukukouMakiatsu}
+                  onChange={(e) => handleChange('fukukouMakiatsu', Number(e.target.value))}
+                  style={{ width: '65px', textAlign: 'center' }}
+                  min="30"
+                  max="70"
                 />
-                {x.title}
-              </label>
-            ))}
-          </div>
+                cm
+              </div>
+            </fieldset>
 
-          <div>
-            <label>覆工巻厚 (cm)</label>
-            <input
-              type="number"
-              value={data.fukukouMakiatsu}
-              onChange={(e) => handleChange('fukukouMakiatsu', Number(e.target.value))}
-            />
+            <fieldset>
+              <legend>インバートの有無</legend>
+              {invertList.map((x) => (
+                <div key={x.id}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="invert"
+                      checked={data.invert === x.id}
+                      onChange={() => handleChange('invert', x.id)}
+                    />
+                    {x.title}
+                  </label>
+                </div>
+              ))}
+            </fieldset>
           </div>
+        </div>
 
-          <div>
-            <label>インバート</label>
-            {invertList.map((x) => (
-              <label key={x.id}>
-                <input
-                  type="radio"
-                  checked={data.invert === x.id}
-                  onChange={() => handleChange('invert', x.id)}
-                />
-                {x.title}
-              </label>
-            ))}
+        {/* 調査・計測結果の条件 */}
+        <div className="container">
+          <div className="section-title">
+            <h2 className="section-title">調査・計測結果の条件</h2>
+            <div className="divider"></div>
           </div>
+        </div>
 
-          <div>
-            <label>背面空洞</label>
-            {haimenKudoList.map((x) => (
-              <label key={x.id}>
-                <input
-                  type="radio"
-                  checked={data.haimenKudo === x.id}
-                  onChange={() => handleChange('haimenKudo', x.id)}
-                />
-                {x.title}
-              </label>
-            ))}
-          </div>
-        </fieldset>
+        <div className="container conditions">
+          <div className="liner">
+            <fieldset>
+              <legend>背面空洞の有無</legend>
+              {haimenKudoList.map((x) => (
+                <div key={x.id} className={data.uragomeChunyukoStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="haimenKudo"
+                      checked={data.haimenKudo === x.id}
+                      onChange={() => handleChange('haimenKudo', x.id)}
+                      disabled={data.uragomeChunyukoStyle?.[x.id] !== 'Enable'}
+                    />
+                    {x.title}
+                  </label>
+                </div>
+              ))}
+            </fieldset>
 
-        <fieldset>
-          <legend>調査・計測結果</legend>
-          
-          <div>
-            <label>変形モード</label>
-            {henkeiModeList.map((x) => (
-              <label key={x.id}>
-                <input
-                  type="radio"
-                  checked={data.henkeiMode === x.id}
-                  onChange={() => handleChange('henkeiMode', x.id)}
-                />
-                {x.title}
-              </label>
-            ))}
-          </div>
+            <fieldset>
+              <legend>変形モード</legend>
+              {henkeiModeList.map((x) => (
+                <div key={x.id} className={data.henkeiModeStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="henkeiMode"
+                      checked={data.henkeiMode === x.id}
+                      onChange={() => handleChange('henkeiMode', x.id)}
+                      disabled={data.henkeiModeStyle?.[x.id] !== 'Enable'}
+                    />
+                    {x.title}
+                  </label>
+                </div>
+              ))}
+            </fieldset>
 
-          <div>
-            <label>地山強度 (MPa)</label>
-            <input
-              type="number"
-              value={data.jiyamaKyodo}
-              onChange={(e) => handleChange('jiyamaKyodo', Number(e.target.value))}
-            />
-          </div>
+            <fieldset>
+              <legend>地山強度</legend>
+              <input
+                type="number"
+                name="jiyamaKyodo"
+                value={data.jiyamaKyodo}
+                onChange={(e) => handleChange('jiyamaKyodo', Number(e.target.value))}
+                style={{ width: '65px', textAlign: 'center' }}
+                min="2"
+                max="8"
+              />
+              MPa
+            </fieldset>
 
-          <div>
-            <label>内空変位速度 (mm/日)</label>
-            <input
-              type="number"
-              value={data.naikuHeniSokudo}
-              onChange={(e) => handleChange('naikuHeniSokudo', Number(e.target.value))}
-            />
+            <fieldset>
+              <legend>内空変位速度, 盤ぶくれ速度</legend>
+              <input
+                type="number"
+                name="naikuHeniSokudo"
+                value={data.naikuHeniSokudo}
+                onChange={(e) => handleChange('naikuHeniSokudo', Number(e.target.value))}
+                style={{ width: '65px', textAlign: 'center' }}
+              />
+              mm/年
+              <button onClick={() => {}}>モニタリングデータ取得</button>
+              <div>
+                <pre>{/* tempMonitoringData */}</pre>
+              </div>
+            </fieldset>
           </div>
-        </fieldset>
+        </div>
 
-        <fieldset>
-          <legend>対策工の条件</legend>
-          
-          <div>
-            <label>裏込注入工</label>
-            {uragomeChunyukoList.map((x) => (
-              <label key={x.id}>
-                <input
-                  type="radio"
-                  checked={data.uragomeChunyuko === x.id}
-                  onChange={() => handleChange('uragomeChunyuko', x.id)}
-                />
-                {x.title}
-              </label>
-            ))}
+        {/* 対策工の条件 */}
+        <div className="container">
+          <div className="section-title">
+            <h2 className="section-title">対策工の条件</h2>
+            <div className="divider"></div>
           </div>
+        </div>
 
-          <div>
-            <label>ロックボルト工</label>
-            {lockBoltKouList.map((x) => (
-              <label key={x.id}>
-                <input
-                  type="radio"
-                  checked={data.lockBoltKou === x.id}
-                  onChange={() => handleChange('lockBoltKou', x.id)}
-                />
-                {x.title}
-              </label>
-            ))}
-          </div>
+        <div className="container conditions">
+          <div className="liner">
+            <fieldset>
+              <legend>裏込注入工</legend>
+              {uragomeChunyukoList.map((x) => (
+                <div key={x.id}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="uragomeChunyuko"
+                      checked={data.uragomeChunyuko === x.id}
+                      onChange={() => handleChange('uragomeChunyuko', x.id)}
+                    />
+                    {x.title}
+                  </label>
+                </div>
+              ))}
+            </fieldset>
 
-          <div>
-            <label>ロックボルト長 (m)</label>
-            <input
-              type="number"
-              value={data.lockBoltLength}
-              onChange={(e) => handleChange('lockBoltLength', Number(e.target.value))}
-            />
-          </div>
+            <fieldset>
+              <legend>ロックボルト工</legend>
+              {!data.henkeiMode4Flag ? (
+                <div className="liner lockbolt">
+                  <div>
+                    {lockBoltKouList.map((x) => (
+                      <div key={x.id}>
+                        <label>
+                          <input
+                            type="radio"
+                            name="lockBoltKou"
+                            checked={data.lockBoltKou === x.id}
+                            onChange={() => handleChange('lockBoltKou', x.id)}
+                          />
+                          {x.title}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="margin-left">
+                    {lockBoltLengthList.map((x) => (
+                      <div key={x.id} className={data.lockBoltLengthStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
+                        <label>
+                          <input
+                            type="radio"
+                            name="lockBoltLength"
+                            checked={data.lockBoltLength === x.id}
+                            onChange={() => handleChange('lockBoltLength', x.id)}
+                            disabled={data.lockBoltLengthStyle?.[x.id] !== 'Enable'}
+                          />
+                          {x.title}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p>選択できません</p>
+              )}
+            </fieldset>
 
-          <div>
-            <label>ロックボルト工（下向き）</label>
-            {downwardLockBoltKouList.map((x) => (
-              <label key={x.id}>
-                <input
-                  type="radio"
-                  checked={data.downwardLockBoltKou === x.id}
-                  onChange={() => handleChange('downwardLockBoltKou', x.id)}
-                />
-                {x.title}
-              </label>
-            ))}
-          </div>
+            <fieldset>
+              <legend>ロックボルト工（下向き）</legend>
+              {data.downwardLockBoltEnable ? (
+                <div className="liner lockbolt">
+                  <div>
+                    {downwardLockBoltKouList.map((x) => (
+                      <div key={x.id}>
+                        <label>
+                          <input
+                            type="radio"
+                            name="downwardLockBoltKou"
+                            checked={data.downwardLockBoltKou === x.id}
+                            onChange={() => handleChange('downwardLockBoltKou', x.id)}
+                          />
+                          {x.title}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="margin-left">
+                    {downwardLockBoltLengthList.map((x) => (
+                      <div key={x.id} className={data.downwardLockBoltLengthStyle !== 'Enable' ? 'Disable' : ''}>
+                        <label>
+                          <input
+                            type="radio"
+                            name="downwardLockBoltLength"
+                            checked={data.downwardLockBoltLength === x.id}
+                            onChange={() => handleChange('downwardLockBoltLength', x.id)}
+                            disabled={data.downwardLockBoltLengthStyle !== 'Enable'}
+                          />
+                          {x.title}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p>選択できません</p>
+              )}
+            </fieldset>
 
-          <div>
-            <label>ロックボルト長（下向き）(m)</label>
-            <input
-              type="number"
-              value={data.downwardLockBoltLength}
-              onChange={(e) => handleChange('downwardLockBoltLength', Number(e.target.value))}
-            />
+            <fieldset>
+              <legend>内巻補強</legend>
+              {!data.henkeiMode4Flag ? (
+                uchimakiHokyoList.map((x) => (
+                  <div key={x.id}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="uchimakiHokyo"
+                        checked={data.uchimakiHokyo === x.id}
+                        onChange={() => handleChange('uchimakiHokyo', x.id)}
+                      />
+                      {x.title}
+                    </label>
+                  </div>
+                ))
+              ) : (
+                <p>選択できません</p>
+              )}
+            </fieldset>
           </div>
+        </div>
 
-          <div>
-            <label>内巻補強</label>
-            {uchimakiHokyoList.map((x) => (
-              <label key={x.id}>
-                <input
-                  type="radio"
-                  checked={data.uchimakiHokyo === x.id}
-                  onChange={() => handleChange('uchimakiHokyo', x.id)}
-                />
-                {x.title}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-      </div>
-      <div className="submit-container">
-        <button type="submit" className="submit-button">計算する</button>
-      </div>
-    </form>
+        <div className="submit-container">
+          <button type="submit" className="submit-button">計算する</button>
+        </div>
+      </form>
+    </div>
   );
 }
