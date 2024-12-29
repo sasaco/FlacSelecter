@@ -6,8 +6,6 @@ import { InputData, InputDataService } from '../../services/inputData';
 import { setEnable } from '../../utils/setEnable';
 import '../../styles/input-page.css';
 
-// Add type declarations for event handlers
-type FormEvent = React.FormEvent<HTMLFormElement>;
 type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
 export default function InputPage() {
@@ -83,18 +81,19 @@ export default function InputPage() {
     setData((prev: InputData) => ({ ...prev, [field]: value }));
   };
 
+  const handleNavigate = async () => {
+    inputService.Data = data;
+    localStorage.setItem('inputData', JSON.stringify(data));
+    await router.push('/output-page');
+  };
+
   return (
-    <form onSubmit={async (e: FormEvent) => {
-        e.preventDefault();
-        inputService.Data = data;
-        localStorage.setItem('inputData', JSON.stringify(data));
-        await router.push('/output-page');
-      }}>
-        <div className="container">
-          <div className="section-title">
-            <h2>構造条件</h2>
-            <div className="divider"></div>
-          </div>
+    <div>
+      <div className="container">
+        <div className="section-title">
+          <h2>構造条件</h2>
+          <div className="divider"></div>
+        </div>
       </div>
 
       <div className="container conditions">
@@ -186,7 +185,7 @@ export default function InputPage() {
                     name="henkeiMode"
                     checked={data.henkeiMode === x.id}
                     onChange={() => handleChange('henkeiMode', x.id)}
-                    disabled={enableState.henkeiModeStyle[x.id - 1] !== 'Enable'}
+                    disabled={enableState.henkeiModeStyle[henkeiModeList.findIndex(item => item.id === x.id)] !== 'Enable'}
                   />
                   {x.title}
                 </label>
@@ -248,6 +247,7 @@ export default function InputPage() {
                     checked={data.uragomeChunyuko === x.id}
                     onChange={() => handleChange('uragomeChunyuko', x.id)}
                     disabled={enableState.uragomeChunyukoStyle[x.id] !== 'Enable'}
+                    id={`uragomeChunyuko${x.id}`}
                   />
                   {x.title}
                 </label>
@@ -257,55 +257,61 @@ export default function InputPage() {
 
           <fieldset>
             <legend>ロックボルト工</legend>
-            <div className="liner">
-              <div>
-                {lockBoltKouList.map((x) => (
-                  <div key={x.id}>
-                    <label>
-                      <input
-                        type="radio"
-                        name="lockBoltKou"
-                        checked={data.lockBoltKou === x.id}
-                        onChange={() => handleChange('lockBoltKou', x.id)}
-                        disabled={enableState.henkeiMode4Flag}
-                      />
-                      {x.title}
-                    </label>
-                  </div>
-                ))}
+            {!enableState.henkeiMode4Flag ? (
+              <div className="liner">
+                <div className="bolt-options">
+                  {lockBoltKouList.map((x) => (
+                    <div key={x.id}>
+                      <label>
+                        <input
+                          type="radio"
+                          name="lockBoltKou"
+                          id={`lockBoltKou${x.id}`}
+                          checked={data.lockBoltKou === x.id}
+                          onChange={() => handleChange('lockBoltKou', x.id)}
+                        />
+                        {x.title}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <div className="margin-left">
+                  {lockBoltLengthList.map((x) => (
+                    <div key={x.id} id={`lockBoltLength${x.id}`}>
+                      <label>
+                        <input
+                          type="radio"
+                          name="lockBoltLength"
+                          checked={data.lockBoltLength === x.id}
+                          onChange={() => handleChange('lockBoltLength', x.id)}
+                          disabled={enableState.lockBoltLengthStyle[lockBoltLengthList.findIndex(item => item.id === x.id)] !== 'Enable'}
+                        />
+                        {x.title}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="margin-left">
-                {lockBoltLengthList.map((x) => (
-                  <div key={x.id}>
-                    <label>
-                      <input
-                        type="radio"
-                        name="lockBoltLength"
-                        checked={data.lockBoltLength === x.id}
-                        onChange={() => handleChange('lockBoltLength', x.id)}
-                        disabled={data.lockBoltKou === 0}
-                      />
-                      {x.title}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ) : (
+              <p className="disabled-text">選択できません</p>
+            )}
           </fieldset>
 
           <fieldset>
             <legend>ロックボルト工（下向き）</legend>
             {enableState.downwardLockBoltEnable ? (
               <div className="liner">
-                <div>
+                <div className="bolt-options">
                   {downwardLockBoltKouList.map((x) => (
                     <div key={x.id}>
                       <label>
                         <input
                           type="radio"
                           name="downwardLockBoltKou"
+                          id={`downwardLockBoltKou${x.id}`}
                           checked={data.downwardLockBoltKou === x.id}
                           onChange={() => handleChange('downwardLockBoltKou', x.id)}
+                          disabled={!enableState.downwardLockBoltEnable}
                         />
                         {x.title}
                       </label>
@@ -319,6 +325,7 @@ export default function InputPage() {
                         <input
                           type="radio"
                           name="downwardLockBoltLength"
+                          id={`downwardLockBoltLength${x.id}`}
                           checked={data.downwardLockBoltLength === x.id}
                           onChange={() => handleChange('downwardLockBoltLength', x.id)}
                           disabled={enableState.downwardLockBoltLengthStyle !== 'Enable'}
@@ -330,29 +337,33 @@ export default function InputPage() {
                 </div>
               </div>
             ) : (
-              <p>選択できません</p>
+              <p className="disabled-text">選択できません</p>
             )}
           </fieldset>
 
           <fieldset>
             <legend>内巻補強</legend>
-            {uchimakiHokyoList.map((x) => (
-              <div key={x.id}>
-                <label>
-                  <input
-                    type="radio"
-                    name="uchimakiHokyo"
-                    checked={data.uchimakiHokyo === x.id}
-                    onChange={() => handleChange('uchimakiHokyo', x.id)}
-                    disabled={enableState.henkeiMode4Flag}
-                  />
-                  {x.title}
-                </label>
-              </div>
-            ))}
+            {!enableState.henkeiMode4Flag ? (
+              uchimakiHokyoList.map((x) => (
+                <div key={x.id}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="uchimakiHokyo"
+                      id={`uchimakiHokyo${x.id}`}
+                      checked={data.uchimakiHokyo === x.id}
+                      onChange={() => handleChange('uchimakiHokyo', x.id)}
+                    />
+                    {x.title}
+                  </label>
+                </div>
+              ))
+            ) : (
+              <p className="disabled-text">選択できません</p>
+            )}
           </fieldset>
         </div>
       </div>
-    </form>
+    </div>
   );
 }

@@ -22,6 +22,7 @@ export function setEnable(data: InputData): EnableState {
 
   // 新幹線（在来工法）
   if (data.tunnelKeizyo === 3) {
+    state.henkeiModeStyle = ['Enable', 'Enable', 'Enable', 'Enable'];
     if (data.haimenKudo === 1) {
       if (data.henkeiMode === 4) {
         data.henkeiMode = 1;
@@ -99,6 +100,16 @@ export function setEnable(data: InputData): EnableState {
   } else {
     state.downwardLockBoltLengthStyle = 'Disable';
     data.downwardLockBoltLength = 0;
+  }
+
+  // インバートありの場合は「脚部押出し」は選べないように
+  if (data.invert === 1) {
+    state.henkeiModeStyle[2] = 'Disable';
+    if (data.henkeiMode === 3) {
+      data.henkeiMode = 1;
+    }
+  } else {
+    state.henkeiModeStyle[2] = 'Enable';
   }
 
   return state;

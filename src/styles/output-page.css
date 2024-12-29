@@ -1,73 +1,98 @@
 .container {
-  padding: 20px;
-}
-
-.result {
+  padding: 1rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+.result {
+  margin: 2rem auto;
+  max-width: 1000px;
+}
+
 .conditions-summary {
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 }
 
 .line {
   display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
 }
 
 .condition-name {
-  font-weight: bold;
-  margin-right: 5px;
+  width: 10rem;
+  text-align-last: justify;
+  margin-right: 0.5rem;
+  font-weight: normal;
+  color: var(--text-color);
 }
 
 .content {
-  flex: 1;
+  margin-left: 1rem;
 }
 
 .result-numbers {
   display: flex;
   justify-content: space-around;
-  margin: 30px 0;
+  margin: 2rem 0;
+  gap: 4rem;
+}
+
+.result-numbers > div {
+  flex: 1;
+  max-width: 300px;
+  text-align: center;
 }
 
 .number {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .number-box {
-  background-color: #f0f0f0;
-  padding: 5px 15px;
-  margin-right: 5px;
-  border-radius: 4px;
-  font-weight: bold;
+  border: 2px solid var(--border-color);
+  padding: 0.5rem 1.5rem;
+  font-size: 1.5rem;
+  min-width: 4rem;
+  text-align: center;
+  background: white;
 }
 
 .images {
   display: flex;
-  justify-content: space-around;
-  margin: 30px 0;
+  gap: 3rem;
+  margin: 3rem 0;
+  justify-content: center;
 }
 
 .images > div {
+  flex: 1;
+  max-width: 450px;
+}
+
+.images > div > div:first-child {
+  margin-bottom: 1rem;
+  font-weight: bold;
   text-align: center;
 }
 
 #outputimage {
-  max-width: 500px;
-  margin-top: 10px;
+  width: 100%;
+  height: auto;
+  border: 2px solid var(--border-color);
+  padding: 1rem;
+  background: white;
+  box-sizing: border-box;
 }
 
 .alert {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #fff3cd;
-  border: 1px solid #ffeeba;
-  border-radius: 4px;
-  color: #856404;
+  margin-top: 2rem;
+  color: var(--alert-color);
+  font-size: 0.9rem;
+  font-style: italic;
   text-align: center;
 }

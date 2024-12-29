@@ -162,47 +162,45 @@ export default function OutputPage() {
   }, []);
 
   return (
-    <div className="result">
+    <div className="container">
+      <div className="result">
         <div className="conditions-summary">
           <div className="line">
-            <div className="condition-name">構造条件</div>:
-            <div className="content">{inputString1}</div>
+            <span className="condition-name">構造条件:</span>
+            <span className="content">{inputString1}</span>
           </div>
           <div className="line">
-            <div className="condition-name">調査・計測結果</div>:
-            <div className="content">{inputString2}</div>
+            <span className="condition-name">調査・計測結果:</span>
+            <span className="content">{inputString2}</span>
           </div>
           <div className="line">
-            <div className="condition-name">対策工条件</div>:
-            <div className="content">{inputString3}</div>
+            <span className="condition-name">対策工条件:</span>
+            <span className="content">{inputString3}</span>
           </div>
         </div>
-
         <div className="result-numbers">
           <div>
             <div>対策後の予測内空変位速度</div>
             <div className="number">
-              <span className="number-box">{displacement}</span>
-              mm/年
+              <div className="number-box">{displacement}</div>
+              <div>mm/年</div>
             </div>
           </div>
           <div>
             <div>変位抑制効果</div>
             <div className="number">
-              <span className="number-box">{effection}</span>％
+              <div className="number-box">{effection}</div>
+              <div>％</div>
             </div>
           </div>
         </div>
-
         <div className="images">
           <div>
             <div>【対策工なし】</div>
             {imgString0 && (
               <img 
-                id="outputimage" 
                 src={`/img/${imgString0}.png`} 
                 alt="対策工なし"
-                style={{ maxWidth: '100%' }}
                 onError={(e) => {
                   console.error('Image load error:', e);
                   e.currentTarget.style.display = 'none';
@@ -210,15 +208,12 @@ export default function OutputPage() {
               />
             )}
           </div>
-
           <div>
             <div>【対策工あり】</div>
             {imgString1 && (
               <img 
-                id="outputimage" 
                 src={`/img/${imgString1}.png`} 
                 alt="対策工あり"
-                style={{ maxWidth: '100%' }}
                 onError={(e) => {
                   console.error('Image load error:', e);
                   e.currentTarget.style.display = 'none';
@@ -228,10 +223,9 @@ export default function OutputPage() {
           </div>
         </div>
         {alertString && (
-          <div className="alert">
-            <div>{alertString}</div>
-          </div>
+          <div className="alert">{alertString}</div>
         )}
       </div>
+    </div>
   );
 }
