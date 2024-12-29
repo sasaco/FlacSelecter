@@ -34,7 +34,7 @@ const defaultInputData: InputData = {
   haimenKudo: 0,
   henkeiMode: 1,
   jiyamaKyodo: 2,
-  naikuHeniSokudo: 0,
+  naikuHeniSokudo: 1,
   uragomeChunyuko: 0,
   lockBoltKou: 0,
   lockBoltLength: 3,
