@@ -185,7 +185,7 @@ export default function InputPage() {
                     name="henkeiMode"
                     checked={data.henkeiMode === x.id}
                     onChange={() => handleChange('henkeiMode', x.id)}
-                    disabled={enableState.henkeiModeStyle[henkeiModeList.findIndex(item => item.id === x.id)] !== 'Enable'}
+                    disabled={!!(enableState.henkeiModeStyle[henkeiModeList.findIndex(item => item.id === x.id)] !== 'Enable')}
                   />
                   {x.title}
                 </label>
@@ -246,7 +246,7 @@ export default function InputPage() {
                     name="uragomeChunyuko"
                     checked={data.uragomeChunyuko === x.id}
                     onChange={() => handleChange('uragomeChunyuko', x.id)}
-                    disabled={enableState.uragomeChunyukoStyle[x.id] !== 'Enable'}
+                    disabled={!!(enableState.uragomeChunyukoStyle[x.id] !== 'Enable')}
                     id={`uragomeChunyuko${x.id}`}
                   />
                   {x.title}
@@ -284,7 +284,7 @@ export default function InputPage() {
                           name="lockBoltLength"
                           checked={data.lockBoltLength === x.id}
                           onChange={() => handleChange('lockBoltLength', x.id)}
-                          disabled={enableState.lockBoltLengthStyle[lockBoltLengthList.findIndex(item => item.id === x.id)] !== 'Enable'}
+                          disabled={!!(enableState.lockBoltLengthStyle[lockBoltLengthList.findIndex(item => item.id === x.id)] !== 'Enable')}
                         />
                         {x.title}
                       </label>
@@ -328,7 +328,7 @@ export default function InputPage() {
                           id={`downwardLockBoltLength${x.id}`}
                           checked={data.downwardLockBoltLength === x.id}
                           onChange={() => handleChange('downwardLockBoltLength', x.id)}
-                          disabled={enableState.downwardLockBoltLengthStyle !== 'Enable'}
+                          disabled={!!(enableState.downwardLockBoltLengthStyle !== 'Enable')}
                         />
                         {x.title}
                       </label>
