@@ -8,7 +8,7 @@ export default function Navigation() {
   const pathname = usePathname();
 
   return (
-    <div>
+    <div className="nav-wrapper">
       <div className="container">
         <div className="page-selector">
           <nav>

@@ -18,17 +18,21 @@ body {
   line-height: 1.5;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  position: relative;
 }
 
 .header {
   margin: 1rem 0;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .header .liner {
@@ -49,6 +53,13 @@ body {
 .header img {
   width: 3rem;
   margin-right: 1rem;
+}
+
+.nav-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  background: var(--background);
 }
 
 .page-selector {
@@ -76,6 +87,7 @@ body {
   align-items: center;
   text-decoration: none;
   float: left;
+  position: relative;
 }
 
 .page-selector a.is-active {
