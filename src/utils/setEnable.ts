@@ -7,6 +7,7 @@ interface EnableState {
   uragomeChunyukoStyle: string[];
   lockBoltLengthStyle: string[];
   downwardLockBoltLengthStyle: string;
+  uchimakiHokyoStyle: { [key: number]: string };
   tempFukukouMakiatsu?: string;
 }
 
@@ -18,6 +19,7 @@ export function setEnable(data: InputData): EnableState {
     uragomeChunyukoStyle: ['Enable', 'Disable'],
     lockBoltLengthStyle: ['Disable', 'Disable', 'Disable', 'Disable'],
     downwardLockBoltLengthStyle: 'Disable',
+    uchimakiHokyoStyle: { 0: 'Enable', 1: 'Enable' },
   };
 
   // 新幹線（在来工法）
@@ -99,6 +101,15 @@ export function setEnable(data: InputData): EnableState {
   } else {
     state.downwardLockBoltLengthStyle = 'Disable';
     data.downwardLockBoltLength = 0;
+  }
+
+  // 内巻補強
+  if (data.henkeiMode4Flag) {
+    // 盤ぶくれモードの場合は無効化
+    state.uchimakiHokyoStyle = { 0: 'Enable', 1: 'Disable' };
+    data.uchimakiHokyo = 0;
+  } else {
+    state.uchimakiHokyoStyle = { 0: 'Enable', 1: 'Enable' };
   }
 
   return state;
