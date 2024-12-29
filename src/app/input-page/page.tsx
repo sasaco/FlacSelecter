@@ -34,7 +34,6 @@ export default function InputPage(): JSX.Element {
       uragomeChunyuko
     } = data;
     
-    setEnable();
   }, [
     data.tunnelKeizyo,
     data.haimenKudo,
