@@ -1,7 +1,11 @@
-import type { Metadata } from "next";
+'use client';
+
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
+import { usePathname } from 'next/navigation';
 import "./globals.css";
 import Template from './template';
+import { metadata } from './metadata';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,16 +17,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "変状対策工設計ツール",
-  description: "変状対策工設計ツール",
-};
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   return (
     <html lang="ja" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
@@ -37,7 +37,17 @@ export default function RootLayout({
             </div>
           </div>
         </div>
-        <Template>{children}</Template>
+        <div>
+          <div className="container">
+            <div className="page-selector">
+              <nav>
+                <Link href="/input-page" className={pathname === '/input-page' ? 'is-active' : ''}>条件の設定</Link>
+                <Link href="/output-page" className={pathname === '/output-page' ? 'is-active' : ''}>結果</Link>
+              </nav>
+            </div>
+          </div>
+          <Template>{children}</Template>
+        </div>
       </body>
     </html>
   );
