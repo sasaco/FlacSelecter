@@ -1,11 +1,12 @@
 'use client';
 
 import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { metadata } from "./metadata";
+import { Providers } from "./providers";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
-import "./globals.css";
 import Template from './template';
-import { metadata } from './metadata';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,17 +20,17 @@ const geistMono = Geist_Mono({
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   const pathname = usePathname();
   return (
-    <html lang="ja" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} >
         <div className="header">
           <div className="container">
             <div className="liner">
-              <img src="/img/logo.png" alt="Logo" />
+              <img src="/images/logo.png" alt="Logo" />
               <div className="title-and-version">
                 <h1>変状対策工設計ツール</h1>
                 <div>Ver.2.1.1</div>
@@ -46,7 +47,9 @@ export default function RootLayout({
               </nav>
             </div>
           </div>
-          <Template>{children}</Template>
+          <Providers>
+            <Template>{children}</Template>
+          </Providers>
         </div>
       </body>
     </html>
