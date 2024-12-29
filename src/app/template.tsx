@@ -12,8 +12,8 @@ export default function Template({
   const pathname = usePathname();
   
   return (
-    <div>
-      <div className="header">
+    <>
+      <header className="header">
         <div className="container">
           <div className="liner">
             <img src="/img/logo.png" alt="Logo" />
@@ -23,22 +23,16 @@ export default function Template({
             </div>
           </div>
         </div>
-      </div>
-      <div>
-        <div className="container">
-          <div className="page-selector">
-            <nav>
-              <Link href="/input-page" className={pathname === '/input-page' ? 'is-active' : ''}>条件の設定</Link>
-              <Link href="/output-page" className={pathname === '/output-page' ? 'is-active' : ''}>結果</Link>
-            </nav>
-          </div>
-        </div>
-        <div className="container">
-          <main>
-            {children}
-          </main>
+      </header>
+      <div className="container">
+        <div className="page-selector">
+          <nav>
+            <Link href="/input-page" className={pathname === '/input-page' ? 'is-active' : ''}>条件の設定</Link>
+            <Link href="/output-page" className={pathname === '/output-page' ? 'is-active' : ''}>結果</Link>
+          </nav>
         </div>
       </div>
-    </div>
+      {children}
+    </>
   );
 }
