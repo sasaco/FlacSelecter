@@ -636,14 +636,6 @@ export default function InputPage(): JSX.Element {
           </fieldset>
         </div>
       </div>
-
-      <div className={styles.container}>
-        <div className={styles.buttonContainer}>
-          <Link href="/output-page" className={styles.calculateButton}>
-            計算する
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }
