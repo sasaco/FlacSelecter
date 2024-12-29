@@ -5,7 +5,7 @@ interface EnableState {
   henkeiMode4Flag: boolean;
   downwardLockBoltEnable: boolean;
   uragomeChunyukoStyle: string[];
-  lockBoltLengthStyle: string[];
+  lockBoltLengthStyle: { [key: number]: string };
   downwardLockBoltLengthStyle: string;
   uchimakiHokyoStyle: { [key: number]: string };
   tempFukukouMakiatsu?: string;
@@ -17,7 +17,7 @@ export function setEnable(data: InputData): EnableState {
     henkeiMode4Flag: false,
     downwardLockBoltEnable: false,
     uragomeChunyukoStyle: ['Enable', 'Disable'],
-    lockBoltLengthStyle: ['Disable', 'Disable', 'Disable', 'Disable'],
+    lockBoltLengthStyle: { 3: 'Disable', 6: 'Disable', 4: 'Disable', 8: 'Disable' },
     downwardLockBoltLengthStyle: 'Disable',
     uchimakiHokyoStyle: { 0: 'Enable', 1: 'Enable' },
   };
@@ -39,9 +39,6 @@ export function setEnable(data: InputData): EnableState {
     if (data.henkeiMode === 4) {
       data.henkeiMode = 1;
     }
-    state.downwardLockBoltEnable = false;
-    data.downwardLockBoltKou = 0;
-    data.downwardLockBoltLength = 0;
     if (data.fukukouMakiatsu > 60) {
       state.tempFukukouMakiatsu = "60";
     }
@@ -72,22 +69,25 @@ export function setEnable(data: InputData): EnableState {
 
   // ロックボルト長さ
   if (data.lockBoltKou === 0) {
-    state.lockBoltLengthStyle = ['Disable', 'Disable', 'Disable', 'Disable'];
+    state.lockBoltLengthStyle = { 3: 'Disable', 6: 'Disable', 4: 'Disable', 8: 'Disable' };
     data.lockBoltLength = 0;
   } else {
     switch (data.tunnelKeizyo) {
       case 1: // 単線 3, 6m
-        state.lockBoltLengthStyle = ['Enable', 'Enable', 'Disable', 'Disable'];
+        state.lockBoltLengthStyle = { 3: 'Enable', 6: 'Enable', 4: 'Disable', 8: 'Disable' };
         if (data.lockBoltLength !== 3 && data.lockBoltLength !== 6) {
           data.lockBoltLength = 3;
         }
         break;
       case 2: // 複線 4, 8m
       case 3: // 新幹線（在来工法）4, 8m
-        state.lockBoltLengthStyle = ['Disable', 'Disable', 'Enable', 'Enable'];
+        state.lockBoltLengthStyle = { 3: 'Disable', 6: 'Disable', 4: 'Enable', 8: 'Enable' };
         if (data.lockBoltLength !== 4 && data.lockBoltLength !== 8) {
           data.lockBoltLength = 4;
         }
+        break;
+      default:
+        state.lockBoltLengthStyle = { 3: 'Enable', 6: 'Enable', 4: 'Enable', 8: 'Enable' };
         break;
     }
   }

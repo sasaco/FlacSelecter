@@ -264,7 +264,7 @@ export default function InputPage() {
               })}
             </fieldset>
 
-            <fieldset>
+            <fieldset className="rock-bolt-section">
               <legend>ロックボルト工</legend>
               {!enableData.henkeiMode4Flag ? (
                 <div className="liner lockbolt">
@@ -307,7 +307,7 @@ export default function InputPage() {
 
             <fieldset>
               <legend>ロックボルト工（下向き）</legend>
-              {enableData.downwardLockBoltLengthStyle === 'Enable' ? (
+              {enableData.downwardLockBoltEnable ? (
                 <div className="liner lockbolt">
                   <div>
                     {downwardLockBoltKouList.map((x) => (
