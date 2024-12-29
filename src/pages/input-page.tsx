@@ -73,37 +73,14 @@ export default function InputPage() {
     setData(prev => ({ ...prev, [field]: value }));
   };
 
-  const [mounted, setMounted] = useState(false);
+  // Initialize enable state on first render
+  const enableState = setEnable(data);
+  const [enableData, setEnableData] = useState(enableState);
 
   useEffect(() => {
-    // Initialize state on mount
-    const enableState = setEnable(data);
-    setData(prev => ({
-      ...prev,
-      henkeiMode4Flag: enableState.henkeiMode4Flag,
-      henkeiModeStyle: enableState.henkeiModeStyle,
-      uragomeChunyukoStyle: enableState.uragomeChunyukoStyle,
-      lockBoltLengthStyle: enableState.lockBoltLengthStyle,
-      downwardLockBoltLengthStyle: enableState.downwardLockBoltLengthStyle,
-      uchimakiHokyoStyle: enableState.uchimakiHokyoStyle
-    }));
-    setMounted(true);
-  }, []); // Run only on mount
-
-  useEffect(() => {
-    if (mounted) {
-      const enableState = setEnable(data);
-      setData(prev => ({
-        ...prev,
-        henkeiMode4Flag: enableState.henkeiMode4Flag,
-        henkeiModeStyle: enableState.henkeiModeStyle,
-        uragomeChunyukoStyle: enableState.uragomeChunyukoStyle,
-        lockBoltLengthStyle: enableState.lockBoltLengthStyle,
-        downwardLockBoltLengthStyle: enableState.downwardLockBoltLengthStyle,
-        uchimakiHokyoStyle: enableState.uchimakiHokyoStyle
-      }));
-    }
-  }, [mounted, data.tunnelKeizyo, data.henkeiMode, data.lockBoltKou, data.downwardLockBoltKou]);
+    const newEnableState = setEnable(data);
+    setEnableData(newEnableState);
+  }, [data.tunnelKeizyo, data.henkeiMode, data.lockBoltKou, data.downwardLockBoltKou]);
 
   return (
     <div>
@@ -187,20 +164,23 @@ export default function InputPage() {
           <div className="liner">
             <fieldset>
               <legend>背面空洞の有無</legend>
-              {haimenKudoList.map((x) => (
-                <div key={x.id} className={data.uragomeChunyukoStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
-                  <label>
-                    <input
-                      type="radio"
-                      name="haimenKudo"
-                      checked={data.haimenKudo === x.id}
-                      onChange={() => handleChange('haimenKudo', x.id)}
-                      disabled={data.uragomeChunyukoStyle?.[x.id] !== 'Enable'}
-                    />
-                    {x.title}
-                  </label>
-                </div>
-              ))}
+              {haimenKudoList.map((x) => {
+                const isDisabled = enableData.uragomeChunyukoStyle?.[x.id] !== 'Enable';
+                return (
+                  <div key={x.id} className={isDisabled ? 'Disable' : ''}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="haimenKudo"
+                        checked={data.haimenKudo === x.id}
+                        onChange={() => handleChange('haimenKudo', x.id)}
+                        disabled={isDisabled}
+                      />
+                      {x.title}
+                    </label>
+                  </div>
+                );
+              })}
             </fieldset>
 
             <fieldset>
@@ -265,25 +245,28 @@ export default function InputPage() {
           <div className="liner">
             <fieldset>
               <legend>裏込注入工</legend>
-              {uragomeChunyukoList.map((x) => (
-                <div key={x.id} className={data.uragomeChunyukoStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
-                  <label>
-                    <input
-                      type="radio"
-                      name="uragomeChunyuko"
-                      checked={data.uragomeChunyuko === x.id}
-                      onChange={() => handleChange('uragomeChunyuko', x.id)}
-                      disabled={data.uragomeChunyukoStyle?.[x.id] !== 'Enable'}
-                    />
-                    {x.title}
-                  </label>
-                </div>
-              ))}
+              {uragomeChunyukoList.map((x) => {
+                const isDisabled = enableData.uragomeChunyukoStyle?.[x.id] !== 'Enable';
+                return (
+                  <div key={x.id} className={isDisabled ? 'Disable' : ''}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="uragomeChunyuko"
+                        checked={data.uragomeChunyuko === x.id}
+                        onChange={() => handleChange('uragomeChunyuko', x.id)}
+                        disabled={isDisabled}
+                      />
+                      {x.title}
+                    </label>
+                  </div>
+                );
+              })}
             </fieldset>
 
             <fieldset>
               <legend>ロックボルト工</legend>
-              {!data.henkeiMode4Flag ? (
+              {!enableData.henkeiMode4Flag ? (
                 <div className="liner lockbolt">
                   <div>
                     {lockBoltKouList.map((x) => (
@@ -302,14 +285,14 @@ export default function InputPage() {
                   </div>
                   <div className="margin-left">
                     {lockBoltLengthList.map((x) => (
-                      <div key={x.id} className={data.lockBoltLengthStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
+                      <div key={x.id} className={enableData.lockBoltLengthStyle?.[x.id] !== 'Enable' ? 'Disable' : ''}>
                         <label>
                           <input
                             type="radio"
                             name="lockBoltLength"
                             checked={data.lockBoltLength === x.id}
                             onChange={() => handleChange('lockBoltLength', x.id)}
-                            disabled={data.lockBoltLengthStyle?.[x.id] !== 'Enable'}
+                            disabled={enableData.lockBoltLengthStyle?.[x.id] !== 'Enable'}
                           />
                           {x.title}
                         </label>
@@ -324,7 +307,7 @@ export default function InputPage() {
 
             <fieldset>
               <legend>ロックボルト工（下向き）</legend>
-              {data.downwardLockBoltEnable ? (
+              {enableData.downwardLockBoltLengthStyle === 'Enable' ? (
                 <div className="liner lockbolt">
                   <div>
                     {downwardLockBoltKouList.map((x) => (
@@ -343,14 +326,14 @@ export default function InputPage() {
                   </div>
                   <div className="margin-left">
                     {downwardLockBoltLengthList.map((x) => (
-                      <div key={x.id} className={data.downwardLockBoltLengthStyle !== 'Enable' ? 'Disable' : ''}>
+                      <div key={x.id} className={enableData.downwardLockBoltLengthStyle !== 'Enable' ? 'Disable' : ''}>
                         <label>
                           <input
                             type="radio"
                             name="downwardLockBoltLength"
                             checked={data.downwardLockBoltLength === x.id}
                             onChange={() => handleChange('downwardLockBoltLength', x.id)}
-                            disabled={data.downwardLockBoltLengthStyle !== 'Enable'}
+                            disabled={enableData.downwardLockBoltLengthStyle !== 'Enable'}
                           />
                           {x.title}
                         </label>
@@ -365,9 +348,9 @@ export default function InputPage() {
 
             <fieldset>
               <legend>内巻補強</legend>
-              {!data.henkeiMode4Flag ? (
+              {!enableData.henkeiMode4Flag ? (
                 uchimakiHokyoList.map((x) => {
-                  const isDisabled = !mounted || data.uchimakiHokyoStyle?.[x.id] !== 'Enable';
+                  const isDisabled = enableData.uchimakiHokyoStyle?.[x.id] !== 'Enable';
                   return (
                     <div key={x.id} className={isDisabled ? 'Disable' : ''}>
                       <label>
