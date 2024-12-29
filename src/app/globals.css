@@ -45,31 +45,40 @@ body {
   margin-right: 1rem;
 }
 
-.page-selector {
-  display: flex;
-  cursor: pointer;
-  font-size: 1.2rem;
-  margin: 1rem 0 0;
+.nav-container {
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 2rem;
 }
 
-.page-selector nav {
+.page-selector {
   display: flex;
+  gap: 2rem;
+  padding: 0.5rem 0;
 }
 
 .page-selector a {
-  display: flex;
-  height: 32px;
-  width: 150px;
-  padding: 10px;
-  margin-right: 4px;
-  color: khaki;
-  background: var(--primary-color);
-  justify-content: center;
+  color: var(--primary-color);
   text-decoration: none;
-  float: left;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  position: relative;
+}
+
+.page-selector a:hover {
+  color: var(--primary-color-light);
 }
 
 .page-selector a.is-active {
-  background-color: var(--primary-color-light);
-  color: white;
+  color: var(--primary-color);
+}
+
+.page-selector a.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary-color);
 }
