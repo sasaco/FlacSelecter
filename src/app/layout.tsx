@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +25,33 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <div className="header">
+          <div className="container">
+            <div className="liner">
+              <img src="./assets/img/logo.png" />
+              <div className="title-and-version">
+                <h1>変状対策工設計ツール</h1>
+                <div>Ver.2.1.1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="container">
+            <div className="page-selector">
+              <nav>
+                <Link href="/input-page" legacyBehavior>
+                  <a className="is-active">条件の設定</a>
+                </Link>
+                <Link href="/output-page" legacyBehavior>
+                  <a className="is-active">結果</a>
+                </Link>
+              </nav>
+            </div>
+          </div>
+          {children}
+        </div>
       </body>
     </html>
   );
