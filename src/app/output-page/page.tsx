@@ -162,7 +162,8 @@ export default function OutputPage() {
   }, []);
 
   return (
-    <div className="result">
+    <div className="container">
+      <div className="result">
         <div className="conditions-summary">
           <div className="line">
             <div className="condition-name">構造条件</div>:
@@ -177,7 +178,6 @@ export default function OutputPage() {
             <div className="content">{inputString3}</div>
           </div>
         </div>
-
         <div className="result-numbers">
           <div>
             <div>対策後の予測内空変位速度</div>
@@ -193,45 +193,54 @@ export default function OutputPage() {
             </div>
           </div>
         </div>
-
         <div className="images">
           <div>
             <div>【対策工なし】</div>
             {imgString0 && (
               <img 
-                id="outputimage" 
+                id="outputimage"
                 src={`/img/${imgString0}.png`} 
                 alt="対策工なし"
-                style={{ maxWidth: '100%' }}
                 onError={(e) => {
-                  console.error('Image load error:', e);
+                  console.error(`Image load error for 対策工なし (${imgString0}.png):`, e);
                   e.currentTarget.style.display = 'none';
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'image-error';
+                    errorDiv.textContent = '画像が見つかりません';
+                    parent.appendChild(errorDiv);
+                  }
                 }}
               />
             )}
           </div>
-
           <div>
             <div>【対策工あり】</div>
             {imgString1 && (
               <img 
-                id="outputimage" 
+                id="outputimage"
                 src={`/img/${imgString1}.png`} 
                 alt="対策工あり"
-                style={{ maxWidth: '100%' }}
                 onError={(e) => {
-                  console.error('Image load error:', e);
+                  console.error(`Image load error for 対策工あり (${imgString1}.png):`, e);
                   e.currentTarget.style.display = 'none';
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'image-error';
+                    errorDiv.textContent = '画像が見つかりません';
+                    parent.appendChild(errorDiv);
+                  }
                 }}
               />
             )}
           </div>
         </div>
-        {alertString && (
-          <div className="alert">
-            <div>{alertString}</div>
-          </div>
-        )}
+        <div className='alert'>
+          <div>{alertString}</div>
+        </div>
       </div>
+    </div>
   );
 }
