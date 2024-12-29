@@ -1,6 +1,8 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
-import { InputData, InputDataService } from '../services/inputData';
-import '../styles/output-page.css';
+import { InputData, InputDataService } from '../../services/inputData';
+import '../../styles/output-page.css';
 
 export default function OutputPage() {
   const [inputString1, setInputString1] = useState<string>('');
@@ -160,80 +162,76 @@ export default function OutputPage() {
   }, []);
 
   return (
-    <div>
-      <div className="container">
-        <div className="result">
-          <div className="conditions-summary">
-            <div className="line">
-              <div className="condition-name">構造条件</div>:
-              <div className="content">{inputString1}</div>
-            </div>
-            <div className="line">
-              <div className="condition-name">調査・計測結果</div>:
-              <div className="content">{inputString2}</div>
-            </div>
-            <div className="line">
-              <div className="condition-name">対策工条件</div>:
-              <div className="content">{inputString3}</div>
-            </div>
+    <div className="result">
+        <div className="conditions-summary">
+          <div className="line">
+            <div className="condition-name">構造条件</div>:
+            <div className="content">{inputString1}</div>
           </div>
-
-          <div className="result-numbers">
-            <div>
-              <div>対策後の予測内空変位速度</div>
-              <div className="number">
-                <span className="number-box">{displacement}</span>
-                mm/年
-              </div>
-            </div>
-            <div>
-              <div>変位抑制効果</div>
-              <div className="number">
-                <span className="number-box">{effection}</span>％
-              </div>
-            </div>
+          <div className="line">
+            <div className="condition-name">調査・計測結果</div>:
+            <div className="content">{inputString2}</div>
           </div>
-
-          <div className="images">
-            <div>
-              <div>【対策工なし】</div>
-              {imgString0 && (
-                <img 
-                  id="outputimage" 
-                  src={`/assets/img/${imgString0}.png`} 
-                  alt="対策工なし"
-                  style={{ maxWidth: '100%' }}
-                  onError={(e) => {
-                    console.error('Image load error:', e);
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              )}
-            </div>
-
-            <div>
-              <div>【対策工あり】</div>
-              {imgString1 && (
-                <img 
-                  id="outputimage" 
-                  src={`/assets/img/${imgString1}.png`} 
-                  alt="対策工あり"
-                  style={{ maxWidth: '100%' }}
-                  onError={(e) => {
-                    console.error('Image load error:', e);
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              )}
-            </div>
+          <div className="line">
+            <div className="condition-name">対策工条件</div>:
+            <div className="content">{inputString3}</div>
           </div>
-          {alertString && (
-            <div className="alert">
-              <div>{alertString}</div>
-            </div>
-          )}
         </div>
+
+        <div className="result-numbers">
+          <div>
+            <div>対策後の予測内空変位速度</div>
+            <div className="number">
+              <span className="number-box">{displacement}</span>
+              mm/年
+            </div>
+          </div>
+          <div>
+            <div>変位抑制効果</div>
+            <div className="number">
+              <span className="number-box">{effection}</span>％
+            </div>
+          </div>
+        </div>
+
+        <div className="images">
+          <div>
+            <div>【対策工なし】</div>
+            {imgString0 && (
+              <img 
+                id="outputimage" 
+                src={`/img/${imgString0}.png`} 
+                alt="対策工なし"
+                style={{ maxWidth: '100%' }}
+                onError={(e) => {
+                  console.error('Image load error:', e);
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            )}
+          </div>
+
+          <div>
+            <div>【対策工あり】</div>
+            {imgString1 && (
+              <img 
+                id="outputimage" 
+                src={`/img/${imgString1}.png`} 
+                alt="対策工あり"
+                style={{ maxWidth: '100%' }}
+                onError={(e) => {
+                  console.error('Image load error:', e);
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            )}
+          </div>
+        </div>
+        {alertString && (
+          <div className="alert">
+            <div>{alertString}</div>
+          </div>
+        )}
       </div>
-    </div>
   );
 }
