@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { InputData, InputDataService } from '../../services/inputData';
+import { InputData } from '../../services/inputData';
 import { setEnable } from '../../utils/setEnable';
 import '../../styles/input-page.css';
+import { InputDataContext } from '../../context/InputDataContext';
 
 export default function InputPage() {
   const router = useRouter();
-  const inputService = new InputDataService();
-  const [data, setData] = useState<InputData>(inputService.Data);
+  const context = useContext(InputDataContext);
+  if (!context) return null;
+  const { data, setData } = context;
 
   const tunnelKeizyoList = [
     { id: 1, title: '単線' },
@@ -63,6 +65,10 @@ export default function InputPage() {
 
   useEffect(() => {
     setEnable(data);
+    // Persist data changes to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('inputData', JSON.stringify(data));
+    }
   }, [data]);
 
   return (
