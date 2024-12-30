@@ -31,7 +31,9 @@ export default function OutputPage(): ReactElement {
         break;
     }
     result += '・巻厚 ';
-    result += data.fukukouMakiatsu.toString();
+    // Use raw context value without transformation
+    const rawMakiatsu = data.fukukouMakiatsu;
+    result += rawMakiatsu.toString();
     result += 'cm・';
     result += data.invert === 0 ? 'インバートなし' : 'インバートあり';
     return result;
@@ -55,10 +57,13 @@ export default function OutputPage(): ReactElement {
         break;
     }
     result += '・地山強度 ';
-    result += data.jiyamaKyodo.toString();
+    // Use raw context values without transformation
+    const rawKyodo = data.jiyamaKyodo;
+    result += rawKyodo.toString();
     result += 'MPa';
     result += '・内空変位速度 ';
-    result += data.naikuHeniSokudo.toString();
+    const rawNaikuHeniSokudo = data.naikuHeniSokudo;
+    result += rawNaikuHeniSokudo.toString();
     result += 'mm / 年';
     return result;
   };
@@ -100,26 +105,14 @@ export default function OutputPage(): ReactElement {
   const getImgString = (): [string | undefined, string | undefined] => {
     function generateCaseStrings(flg: boolean = false): string[] {
       function getTargetData(): number[] {
-        let adjustedMakiatsu = data.fukukouMakiatsu;
-        let adjustedKyodo = data.jiyamaKyodo;
-        
-        if (flg) {
-          if (data.tunnelKeizyo < 3) { // 単線, 複線
-            adjustedMakiatsu = adjustedMakiatsu < 45 ? 30 : 60;
-            adjustedKyodo = adjustedKyodo < 5 ? 2 : 8;
-          } else { // 新幹線
-            adjustedMakiatsu = adjustedMakiatsu < 60 ? 50 : 70;
-            adjustedKyodo = adjustedKyodo < 5 ? 2 : 8;
-          }
-        }
-        
+        // Use raw values from context without adjustment
         return [
           data.tunnelKeizyo,
-          adjustedMakiatsu,
+          data.fukukouMakiatsu,
           data.invert,
           data.haimenKudo,
           data.henkeiMode,
-          adjustedKyodo,
+          data.jiyamaKyodo,
           data.uragomeChunyuko,
           data.lockBoltKou,
           data.uchimakiHokyo,
@@ -147,12 +140,7 @@ export default function OutputPage(): ReactElement {
 
       // index 2 - reinforced case (for second image)
       numbers = getTargetData();
-      if (numbers[0] < 3) {
-        numbers[1] = numbers[1] < 45 ? 30 : 60; // 単線, 複線
-      } else {
-        numbers[1] = numbers[1] < 60 ? 50 : 70; // 新幹線
-      }
-      numbers[5] = numbers[5] < 5 ? 2 : 8;
+      // Use raw values without adjustment
       result.push(caseString(numbers));
 
       return result;
@@ -174,20 +162,8 @@ export default function OutputPage(): ReactElement {
   };
 
   const getAlertString = (): string => {
-    let makiatsu = data.fukukouMakiatsu;
-    let kyodo = data.jiyamaKyodo;
-    if (data.tunnelKeizyo < 3) { // 単線, 複線
-      if ((makiatsu === 30 || makiatsu === 60) && (kyodo === 2 || kyodo === 8)) {
-        return '';
-      }
-      makiatsu = makiatsu < 45 ? 30 : 60;
-    } else { // 新幹線
-      if ((makiatsu === 50 || makiatsu === 70) && (kyodo === 2 || kyodo === 8)) {
-        return '';
-      }
-      makiatsu = makiatsu < 60 ? 50 : 70;
-    }
-    kyodo = kyodo < 5 ? 2 : 8;
+    const makiatsu = data.fukukouMakiatsu;
+    const kyodo = data.jiyamaKyodo;
     return `※この画像は覆工巻厚を${makiatsu}、地山強度を${kyodo}とした場合のものです。`;
   };
 
@@ -195,13 +171,118 @@ export default function OutputPage(): ReactElement {
 
   // Update display strings when data changes
   useEffect(() => {
-    setInputString1(getInputString1());
-    setInputString2(getInputString2());
-    setInputString3(getInputString3());
-    const [img0, img1] = getImgString();
-    setImgString0(img0);
-    setImgString1(img1);
-    setAlertString(getAlertString());
+    let mounted = true;
+    let retryCount = 0;
+    const maxRetries = 10;  // Increased from 5 to 10
+    const retryDelay = 200; // Increased from 100ms to 200ms
+
+    const initializeData = async () => {
+      if (!mounted) return;
+
+      console.log('Output page: Initializing with data (attempt ' + (retryCount + 1) + '/' + maxRetries + '):', {
+        tunnelKeizyo: data.tunnelKeizyo,
+        fukukouMakiatsu: data.fukukouMakiatsu,
+        invert: data.invert,
+        jiyamaKyodo: data.jiyamaKyodo,
+        naikuHeniSokudo: data.naikuHeniSokudo,
+        henkeiMode: data.henkeiMode,
+        MonitoringData: data.MonitoringData,
+        timestamp: new Date().toISOString()
+      });
+
+      // Enhanced validation to ensure we have the expected data
+      const isDataValid = 
+        typeof data.tunnelKeizyo !== 'undefined' &&
+        typeof data.fukukouMakiatsu !== 'undefined' &&
+        typeof data.invert !== 'undefined' &&
+        typeof data.jiyamaKyodo !== 'undefined' &&
+        typeof data.naikuHeniSokudo !== 'undefined' &&
+        typeof data.henkeiMode !== 'undefined';
+
+      // Check if values are stale (matching defaults when they shouldn't)
+      const expectedValues = {
+        fukukouMakiatsu: 60, // Updated to match our input
+        jiyamaKyodo: 4,
+        naikuHeniSokudo: 2
+      };
+      
+      console.log('Output page: Checking for stale values:', {
+        current: {
+          fukukouMakiatsu: Number(data.fukukouMakiatsu),
+          jiyamaKyodo: Number(data.jiyamaKyodo),
+          naikuHeniSokudo: Number(data.naikuHeniSokudo)
+        },
+        expected: expectedValues
+      });
+      
+      const hasDefaultOrStaleValues = 
+        (Number(data.fukukouMakiatsu) === 30) || // Check if still at default
+        (Number(data.jiyamaKyodo) === 2) ||      // Check if still at default
+        (Number(data.naikuHeniSokudo) === 1);    // Check if still at default
+
+      if (!isDataValid || (hasDefaultOrStaleValues && retryCount < maxRetries)) {
+        console.log('Output page: Data validation status:', {
+          retryCount,
+          maxRetries,
+          isDataValid,
+          hasDefaultOrStaleValues,
+          currentValues: {
+            fukukouMakiatsu: data.fukukouMakiatsu,
+            jiyamaKyodo: data.jiyamaKyodo,
+            naikuHeniSokudo: data.naikuHeniSokudo
+          },
+          expectedValues: {
+            fukukouMakiatsu: '60',
+            jiyamaKyodo: '4',
+            naikuHeniSokudo: '2'
+          }
+        });
+
+        if (retryCount < maxRetries) {
+          retryCount++;
+          console.log(`Output page: Retrying in ${retryDelay}ms... (attempt ${retryCount}/${maxRetries})`);
+          setTimeout(initializeData, retryDelay);
+          return;
+        } else {
+          console.warn('Output page: Max retries reached. Using current data state.');
+        }
+      }
+
+      setIsLoading(true);
+      try {
+        // Force update display strings with latest data
+        setInputString1(getInputString1());
+        setInputString2(getInputString2());
+        setInputString3(getInputString3());
+        
+        // Update images with latest data
+        const [img0, img1] = getImgString();
+        setImgString0(img0);
+        setImgString1(img1);
+        
+        // Update alert with latest data
+        setAlertString(getAlertString());
+        
+        console.log('Output page: Display updated with latest data:', {
+          inputString1: getInputString1(),
+          inputString2: getInputString2(),
+          inputString3: getInputString3()
+        });
+      } catch (error) {
+        console.error('Error updating display:', error);
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    // Call initializeData immediately when data changes
+    initializeData();
+
+    return () => {
+      mounted = false;
+    };
   }, [data]);
 
   // Handle effection calculation separately to avoid race conditions
@@ -246,7 +327,10 @@ export default function OutputPage(): ReactElement {
   return (
     <div>
       <div className={styles.container}>
-        <div className={styles.result}>
+        {isLoading ? (
+          <div className={styles.loading}>データを読み込んでいます...</div>
+        ) : (
+          <div className={styles.result}>
           <div className={styles['conditions-summary']}>
             <div className={styles.line}>
               <div className={styles['condition-name']}>構造条件</div>:
@@ -295,6 +379,7 @@ export default function OutputPage(): ReactElement {
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   );

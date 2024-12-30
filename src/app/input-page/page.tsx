@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useInputData } from '@/context/InputDataContext';
 import type { InputData, InputDataContextType } from '@/context/InputDataContext';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import type { FocusEvent, ChangeEvent, FormEvent } from 'react';
 import type { JSX } from 'react';
@@ -15,13 +16,23 @@ interface FormOption {
 }
 
 export default function InputPage(): JSX.Element {
+  const router = useRouter();
   const { data, setData } = useInputData() as InputDataContextType;
+  const [isNavigating, setIsNavigating] = useState(false);
   
   // Form state
   const [tempFukukouMakiatsu, setTempFukukouMakiatsu] = useState(data.fukukouMakiatsu.toString());
   const [tempJiyamaKyodo, setTempJiyamaKyodo] = useState(data.jiyamaKyodo.toString());
   const [tempNaikuHeniSokudo, setTempNaikuHeniSokudo] = useState(data.naikuHeniSokudo.toString());
   const [tempMonitoringData, setTempMonitoringData] = useState(data.MonitoringData);
+  
+  // Update temp values when context data changes
+  useEffect(() => {
+    setTempFukukouMakiatsu(data.fukukouMakiatsu.toString());
+    setTempJiyamaKyodo(data.jiyamaKyodo.toString());
+    setTempNaikuHeniSokudo(data.naikuHeniSokudo.toString());
+    setTempMonitoringData(data.MonitoringData);
+  }, [data]);
 
   // Initialize form state on mount and when specific data fields change
   useEffect(() => {
@@ -239,15 +250,17 @@ export default function InputPage(): JSX.Element {
     if (!Number.isNaN(numValue)) {
       if (numValue < min) {
         alert(`${min}以上の数値を入力してください`);
+        setTempFukukouMakiatsu(min.toString());
         setData((prev: InputData) => ({ ...prev, fukukouMakiatsu: min }));
       } else if (max < numValue) {
         alert(`${max}以下の数値を入力してください`);
+        setTempFukukouMakiatsu(max.toString());
         setData((prev: InputData) => ({ ...prev, fukukouMakiatsu: max }));
       } else {
+        setTempFukukouMakiatsu(numValue.toString());
         setData((prev: InputData) => ({ ...prev, fukukouMakiatsu: numValue }));
       }
     }
-    setTempFukukouMakiatsu(data.fukukouMakiatsu.toString());
   };
 
   const setJiyamaKyodo = (value: string): void => {
@@ -255,23 +268,25 @@ export default function InputPage(): JSX.Element {
     if (!Number.isNaN(numValue)) {
       if (numValue < 2) {
         alert("2以上の数値を入力してください");
+        setTempJiyamaKyodo("2");
         setData((prev: InputData) => ({ ...prev, jiyamaKyodo: 2 }));
       } else if (8 < numValue) {
         alert("8以下の数値を入力してください");
+        setTempJiyamaKyodo("8");
         setData((prev: InputData) => ({ ...prev, jiyamaKyodo: 8 }));
       } else {
+        setTempJiyamaKyodo(numValue.toString());
         setData((prev: InputData) => ({ ...prev, jiyamaKyodo: numValue }));
       }
     }
-    setTempJiyamaKyodo(data.jiyamaKyodo.toString());
   };
 
   const setNaikuHeniSokudo = (value: string): void => {
     const numValue = Number(value);
     if (!Number.isNaN(numValue)) {
+      setTempNaikuHeniSokudo(numValue.toString());
       setData((prev: InputData) => ({ ...prev, naikuHeniSokudo: numValue }));
     }
-    setTempNaikuHeniSokudo(data.naikuHeniSokudo.toString());
   };
 
   const getMonitoringData = async (): Promise<void> => {
@@ -341,8 +356,11 @@ export default function InputPage(): JSX.Element {
               <input
                 type="number"
                 value={tempFukukouMakiatsu}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setTempFukukouMakiatsu(e.target.value)}
-                onBlur={(e: FocusEvent<HTMLInputElement>) => setFukukouMakiatsu(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  const newValue = e.target.value;
+                  setTempFukukouMakiatsu(newValue);
+                  setFukukouMakiatsu(newValue);
+                }}
                 style={{ width: '65px', textAlign: 'center' }}
                 min="30"
                 max="70"
@@ -435,8 +453,11 @@ export default function InputPage(): JSX.Element {
             <input
               type="number"
               value={tempJiyamaKyodo}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setTempJiyamaKyodo(e.target.value)}
-              onBlur={(e: FocusEvent<HTMLInputElement>) => setJiyamaKyodo(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                const newValue = e.target.value;
+                setTempJiyamaKyodo(newValue);
+                setJiyamaKyodo(newValue);
+              }}
               style={{ width: '65px', textAlign: 'center' }}
               min="2"
               max="8"
@@ -450,8 +471,11 @@ export default function InputPage(): JSX.Element {
               <input
                 type="number"
                 value={tempNaikuHeniSokudo}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setTempNaikuHeniSokudo(e.target.value)}
-                onBlur={(e: FocusEvent<HTMLInputElement>) => setNaikuHeniSokudo(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  const newValue = e.target.value;
+                  setTempNaikuHeniSokudo(newValue);
+                  setNaikuHeniSokudo(newValue);
+                }}
                 style={{ width: '65px', textAlign: 'center' }}
               />
               <span>mm/年</span>
@@ -634,6 +658,113 @@ export default function InputPage(): JSX.Element {
               <p>選択できません</p>
             )}
           </fieldset>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div className={styles.container}>
+        <div className={styles.navigation}>
+          <button
+            onClick={async () => {
+              if (isNavigating) return;
+              setIsNavigating(true);
+              try {
+                // Create final data object with all current values
+                const finalData: InputData = {
+                  ...data,
+                  tunnelKeizyo: Number(data.tunnelKeizyo),
+                  fukukouMakiatsu: Number(tempFukukouMakiatsu),
+                  invert: Number(data.invert),
+                  haimenKudo: Number(data.haimenKudo),
+                  henkeiMode: Number(data.henkeiMode),
+                  jiyamaKyodo: Number(tempJiyamaKyodo),
+                  naikuHeniSokudo: Number(tempNaikuHeniSokudo),
+                  uragomeChunyuko: Number(data.uragomeChunyuko),
+                  lockBoltKou: Number(data.lockBoltKou),
+                  lockBoltLength: Number(data.lockBoltLength),
+                  downwardLockBoltKou: Number(data.downwardLockBoltKou),
+                  downwardLockBoltLength: Number(data.downwardLockBoltLength),
+                  uchimakiHokyo: Number(data.uchimakiHokyo),
+                  MonitoringData: tempMonitoringData
+                };
+                
+                console.log('Input page: Preparing to navigate with data:', finalData);
+                
+                // Validate all numeric values
+                Object.entries(finalData).forEach(([key, value]) => {
+                  if (key !== 'MonitoringData' && isNaN(Number(value))) {
+                    throw new Error(`Invalid numeric value for ${key}: ${value}`);
+                  }
+                });
+                
+                // Update context and wait for completion
+                await setData(finalData);
+                
+                // Add a longer delay and verify data is updated
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Force a re-render to ensure we have latest context
+                setData(prevData => ({ ...prevData }));
+                
+                // Verify context update with timeout and retries
+                const contextData = await new Promise<InputData>((resolve, reject) => {
+                  let attempts = 0;
+                  const maxAttempts = 10;
+                  const checkData = () => {
+                    // Force a re-read of the context data
+                    const current = { ...data };
+                    console.log('Input page: Verifying context update (attempt ' + (attempts + 1) + '/' + maxAttempts + '):', {
+                      current: {
+                        fukukouMakiatsu: current.fukukouMakiatsu,
+                        jiyamaKyodo: current.jiyamaKyodo,
+                        naikuHeniSokudo: current.naikuHeniSokudo
+                      },
+                      expected: {
+                        fukukouMakiatsu: finalData.fukukouMakiatsu,
+                        jiyamaKyodo: finalData.jiyamaKyodo,
+                        naikuHeniSokudo: finalData.naikuHeniSokudo
+                      }
+                    });
+                    
+                    // Compare numeric values strictly
+                    if (
+                      Number(current.fukukouMakiatsu) === Number(finalData.fukukouMakiatsu) &&
+                      Number(current.jiyamaKyodo) === Number(finalData.jiyamaKyodo) &&
+                      Number(current.naikuHeniSokudo) === Number(finalData.naikuHeniSokudo)
+                    ) {
+                      console.log('Input page: Context verification successful');
+                      resolve(current);
+                    } else {
+                      attempts++;
+                      if (attempts >= maxAttempts) {
+                        console.error('Input page: Context verification failed after ' + maxAttempts + ' attempts');
+                        reject(new Error('Failed to verify context update after ' + maxAttempts + ' attempts'));
+                      } else {
+                        setTimeout(checkData, 200);  // Increased delay between checks
+                      }
+                    }
+                  };
+                  checkData();
+                });
+                
+                console.log('Input page: Context updated successfully:', contextData);
+                console.log('Input page: All fields updated, proceeding to output page');
+                
+                // Navigate to output page after successful verification
+                console.log('Input page: Navigation starting with verified data:', contextData);
+                router.push('/output-page');
+              } catch (error) {
+                console.error('Error during navigation:', error);
+              } finally {
+                setIsNavigating(false);
+              }
+            }}
+            className={styles.button}
+            style={{ marginTop: '20px' }}
+            disabled={isNavigating}
+          >
+            {isNavigating ? '更新中...' : '結果ページへ'}
+          </button>
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ export interface InputData {
 
 export interface InputDataContextType {
   data: InputData;
-  setData: React.Dispatch<React.SetStateAction<InputData>>;
+  setData: (newData: InputData | ((prevData: InputData) => InputData)) => Promise<void>;
   resetData: () => void;
   getCaseStrings: (flg?: boolean) => string[];
   getEffectionNum: () => Promise<number>;
@@ -47,11 +47,19 @@ const defaultInputData: InputData = {
 const InputDataContext = createContext<InputDataContextType | undefined>(undefined);
 
 function InputDataProvider({ children }: { children: React.ReactNode }) {
-  const [data, setData] = useState<InputData>(defaultInputData);
+  const [data, setDataState] = useState<InputData>(defaultInputData);
   const csvDataRef = React.useRef<any[]>([]);
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
   const initialized = React.useRef(false);
   const loadingRef = React.useRef(false);
+  
+  // Create a ref to store the latest data
+  const dataRef = React.useRef<InputData>(defaultInputData);
+  
+  // Update ref whenever state changes
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
 
   const parseCSVData = React.useCallback((csvText: string) => {
     if (!csvText || typeof csvText !== 'string') {
@@ -324,17 +332,114 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const resetData = () => {
-    setData(defaultInputData);
+  const resetData = async () => {
+    console.log('Context: Resetting data to defaults');
+    const setDataFromContext = contextValue.setData;
+    await setDataFromContext(defaultInputData);
+    console.log('Context: Reset complete, current state:', data);
   };
 
-  const contextValue = useMemo(() => ({
-    data,
-    setData,
-    resetData,
-    getCaseStrings,
-    getEffectionNum
-  }), [data]);
+  // Add detailed debug logging for state updates
+  useEffect(() => {
+    console.log('Context data updated:', {
+      tunnelKeizyo: data.tunnelKeizyo,
+      fukukouMakiatsu: data.fukukouMakiatsu,
+      invert: data.invert,
+      jiyamaKyodo: data.jiyamaKyodo,
+      naikuHeniSokudo: data.naikuHeniSokudo,
+      henkeiMode: data.henkeiMode,
+      MonitoringData: data.MonitoringData
+    });
+  }, [data]);
+
+  // Add initialization logging
+  useEffect(() => {
+    console.log('Context provider mounted with initial data:', defaultInputData);
+  }, []);
+
+  const contextValue = useMemo(() => {
+    const setDataWithSync = async (newData: InputData | ((prevData: InputData) => InputData)): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        try {
+          console.log('Context: setData called with:', typeof newData === 'function' ? 'function' : newData);
+          
+          const updateState = async (dataToSet: InputData) => {
+            try {
+              // Create a new object with strict type conversion
+              console.log('Processing data in context:', dataToSet);
+              const processedData: InputData = {
+                tunnelKeizyo: Math.max(1, Math.min(3, Number(dataToSet.tunnelKeizyo))),
+                fukukouMakiatsu: Number(dataToSet.fukukouMakiatsu), // Remove max validation
+                invert: Number(dataToSet.invert) === 1 ? 1 : 0,
+                haimenKudo: Number(dataToSet.haimenKudo) === 1 ? 1 : 0,
+                henkeiMode: Math.max(1, Math.min(4, Number(dataToSet.henkeiMode))),
+                jiyamaKyodo: Number(dataToSet.jiyamaKyodo), // Remove max validation
+                naikuHeniSokudo: Number(dataToSet.naikuHeniSokudo), // Remove max validation
+                uragomeChunyuko: Number(dataToSet.uragomeChunyuko) === 1 ? 1 : 0,
+                lockBoltKou: Math.max(0, Number(dataToSet.lockBoltKou)),
+                lockBoltLength: Math.max(0, Number(dataToSet.lockBoltLength)),
+                downwardLockBoltKou: Math.max(0, Number(dataToSet.downwardLockBoltKou)),
+                downwardLockBoltLength: Math.max(0, Number(dataToSet.downwardLockBoltLength)),
+                uchimakiHokyo: Number(dataToSet.uchimakiHokyo) === 1 ? 1 : 0,
+                MonitoringData: dataToSet.MonitoringData || ''
+              };
+              
+              console.log('Context: Setting processed data:', processedData);
+              
+              // Update state using functional update to ensure latest state
+              await new Promise<void>(resolveState => {
+                setDataState(prevState => {
+                  if (JSON.stringify(prevState) === JSON.stringify(processedData)) {
+                    resolveState();
+                    return prevState;
+                  }
+                  resolveState();
+                  return processedData;
+                });
+              });
+              
+              // Update ref immediately
+              dataRef.current = processedData;
+              
+              // Wait for state to be updated
+              await new Promise(resolveTimeout => setTimeout(resolveTimeout, 100));
+              
+              // Verify the update
+              if (JSON.stringify(dataRef.current) !== JSON.stringify(processedData)) {
+                throw new Error('State update verification failed');
+              }
+              
+              // Log the update
+              console.log('Context: State updated successfully:', processedData);
+              
+              resolve();
+            } catch (error) {
+              console.error('Context: Error in updateState:', error);
+              reject(error);
+            }
+          };
+          
+          if (typeof newData === 'function') {
+            const result = (newData as (prevData: InputData) => InputData)(dataRef.current);
+            updateState(result);
+          } else {
+            updateState(newData);
+          }
+        } catch (error) {
+          console.error('Context: Error in setData:', error);
+          reject(error);
+        }
+      });
+    };
+
+    return {
+      data,
+      setData: setDataWithSync,
+      resetData,
+      getCaseStrings,
+      getEffectionNum
+    };
+  }, [data, setDataState]);
 
   return (
     <InputDataContext.Provider value={contextValue}>
