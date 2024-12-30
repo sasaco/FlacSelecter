@@ -189,8 +189,13 @@ export default function InputPage(): JSX.Element {
       }
     }
 
-    // Batch update all state
-    setData(newData);
+    // Batch update all state except tunnelKeizyo
+    const finalData = { ...newData };
+    // Preserve user's tunnelKeizyo selection
+    if (data.tunnelKeizyo !== newData.tunnelKeizyo) {
+      finalData.tunnelKeizyo = data.tunnelKeizyo;
+    }
+    setData(finalData);
     setHenkeiModeStyle(newHenkeiModeStyle);
     setUragomeChunyukoStyle(newUragomeChunyukoStyle);
     setLockBoltLengthStyle(newLockBoltLengthStyle);
@@ -325,8 +330,8 @@ export default function InputPage(): JSX.Element {
                     value={x.id}
                     checked={data.tunnelKeizyo === x.id}
                     onChange={() => {
+                      // Update tunnelKeizyo first, then let useEffect trigger setEnable
                       setData({ ...data, tunnelKeizyo: x.id } as InputData);
-                      setEnable();
                     }}
                   />
                   {x.title}
