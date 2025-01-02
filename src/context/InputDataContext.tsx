@@ -48,7 +48,7 @@ const InputDataContext = createContext<InputDataContextType | undefined>(undefin
 
 function InputDataProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<InputData>(defaultInputData);
-  const csvDataRef = React.useRef<any[]>([]);
+  const csvDataRef = React.useRef<Array<string[]>>([]);
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
   const initialized = React.useRef(false);
   const loadingRef = React.useRef(false);
@@ -64,7 +64,7 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     
-    const newData: any[] = [];
+    const newData: Array<string[]> = [];
     for (let i = 1; i < tmp.length; ++i) {
       try {
         const line = tmp[i].trim();
@@ -237,22 +237,22 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
     return result;
   };
 
-  const getEffection = (data: any[], index: number, naikuHeniSokudo: number): number => {
-    if (!data || !data[index]) {
+  const getEffection = (csvData: Array<string[]>, index: number, naikuHeniSokudo: number): number => {
+    if (!csvData || !csvData[index]) {
       console.error('Invalid data or index in getEffection');
       return 0;
     }
-    const d = data[index];
+    const d = csvData[index];
     if (naikuHeniSokudo < 1) {
-      return d[13] || 0;
+      return Number(d[13]) || 0;
     } else if (naikuHeniSokudo < 2) {
-      return d[14] || 0;
+      return Number(d[14]) || 0;
     } else if (naikuHeniSokudo < 3) {
-      return d[15] || 0;
+      return Number(d[15]) || 0;
     } else if (naikuHeniSokudo < 10) {
-      return d[16] || 0;
+      return Number(d[16]) || 0;
     } else {
-      return d[17] || 0;
+      return Number(d[17]) || 0;
     }
   };
 
@@ -269,7 +269,7 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
       return 0;
     }
 
-    let crrentData: number[][] = [[-1.0, -1.0], [-1.0, -1.0]];
+    const currentData: number[][] = [[-1.0, -1.0], [-1.0, -1.0]];
     let counter = 0;
     const naikuHeniSokudo = data?.naikuHeniSokudo || 0;
 
@@ -277,26 +277,26 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
       const row = csvData[index];
       if (!row || !row[1]) continue;
       
-      const crrent = row[1];
+      const current = row[1];
 
-      if (caseStrings[0] === crrent) {
+      if (caseStrings[0] === current) {
         return getEffection(csvData, index, naikuHeniSokudo);
       }
 
-      if (caseStrings[3] === crrent) {
-        crrentData[0][0] = getEffection(csvData, index, naikuHeniSokudo);
+      if (caseStrings[3] === current) {
+        currentData[0][0] = getEffection(csvData, index, naikuHeniSokudo);
         counter++;
       }
-      if (caseStrings[4] === crrent) {
-        crrentData[1][0] = getEffection(csvData, index, naikuHeniSokudo);
+      if (caseStrings[4] === current) {
+        currentData[1][0] = getEffection(csvData, index, naikuHeniSokudo);
         counter++;
       }
-      if (caseStrings[5] === crrent) {
-        crrentData[0][1] = getEffection(csvData, index, naikuHeniSokudo);
+      if (caseStrings[5] === current) {
+        currentData[0][1] = getEffection(csvData, index, naikuHeniSokudo);
         counter++;
       }
-      if (caseStrings[6] === crrent) {
-        crrentData[1][1] = getEffection(csvData, index, naikuHeniSokudo);
+      if (caseStrings[6] === current) {
+        currentData[1][1] = getEffection(csvData, index, naikuHeniSokudo);
         counter++;
       }
     }
@@ -305,8 +305,8 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
       return 0;
     }
 
-    const temp1 = (crrentData[1][0] - crrentData[0][0]) * (data?.fukukouMakiatsu || 0) / 30 + 2 * crrentData[0][0] - crrentData[1][0];
-    const temp2 = (crrentData[1][1] - crrentData[0][1]) * (data?.fukukouMakiatsu || 0) / 30 + 2 * crrentData[0][1] - crrentData[1][1];
+    const temp1 = (currentData[1][0] - currentData[0][0]) * (data?.fukukouMakiatsu || 0) / 30 + 2 * currentData[0][0] - currentData[1][0];
+    const temp2 = (currentData[1][1] - currentData[0][1]) * (data?.fukukouMakiatsu || 0) / 30 + 2 * currentData[0][1] - currentData[1][1];
     const temp3 = (temp2 - temp1) * (data?.jiyamaKyodo || 0) / 6 + 4 * temp1 / 3 - temp2 / 3;
 
     return Math.round(temp3 * 10) / 10;

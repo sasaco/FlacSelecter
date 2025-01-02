@@ -1,38 +1,36 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useInputData } from '@/context/InputDataContext';
 import type { InputData, InputDataContextType } from '@/context/InputDataContext';
-import Link from 'next/link';
 import styles from './page.module.css';
-import type { FocusEvent, ChangeEvent, FormEvent } from 'react';
+import type { FocusEvent, ChangeEvent } from 'react';
 import type { JSX } from 'react';
-import type { Dispatch, SetStateAction } from 'react';
 
 interface FormOption {
   id: number;
   title: string;
 }
 
-export default function InputPage(): JSX.Element {
+const InputPage = (): JSX.Element => {
+  // Initialize context
   const { data, setData } = useInputData() as InputDataContextType;
   
-  // Form state
-  const [tempFukukouMakiatsu, setTempFukukouMakiatsu] = useState(data.fukukouMakiatsu.toString());
-  const [tempJiyamaKyodo, setTempJiyamaKyodo] = useState(data.jiyamaKyodo.toString());
-  const [tempNaikuHeniSokudo, setTempNaikuHeniSokudo] = useState(data.naikuHeniSokudo.toString());
-  const [tempMonitoringData, setTempMonitoringData] = useState(data.MonitoringData);
+  // Initialize form state variables
+  const [henkeiModeStyle, setHenkeiModeStyle] = useState<string[]>(['Enable', 'Enable', 'Enable', 'Enable']);
+  const [uragomeChunyukoStyle, setUragomeChunyukoStyle] = useState<string[]>(['Enable', 'Disable']);
+  const [lockBoltLengthStyle, setLockBoltLengthStyle] = useState<string[]>(['Disable', 'Disable', 'Disable', 'Disable']);
+  const [downwardLockBoltEnable, setDownwardLockBoltEnable] = useState(false);
+  const [henkeiMode4Flag, setHenkeiMode4Flag] = useState(false);
+  const [downwardLockBoltLengthStyle, setDownwardLockBoltLengthStyle] = useState<string[]>(['Disable', 'Disable', 'Disable', 'Disable']);
+  const [tempFukukouMakiatsu, setTempFukukouMakiatsu] = useState(() => data.fukukouMakiatsu.toString());
+  const [tempJiyamaKyodo, setTempJiyamaKyodo] = useState(() => data.jiyamaKyodo.toString());
+  const [tempNaikuHeniSokudo, setTempNaikuHeniSokudo] = useState(() => data.naikuHeniSokudo.toString());
+  const [tempMonitoringData, setTempMonitoringData] = useState(() => data.MonitoringData);
 
   // Initialize form state on mount and when specific data fields change
   useEffect(() => {
-    const {
-      tunnelKeizyo,
-      haimenKudo,
-      henkeiMode,
-      fukukouMakiatsu,
-      lockBoltKou,
-      uragomeChunyuko
-    } = data;
+    // Data is accessed directly via data.property
     
   }, [
     data.tunnelKeizyo,
@@ -43,13 +41,15 @@ export default function InputPage(): JSX.Element {
     data.uragomeChunyuko
   ]);
   
-  // UI state
-  const [henkeiMode4Flag, setHenkeiMode4Flag] = useState(false);
-  const [henkeiModeStyle, setHenkeiModeStyle] = useState<string[]>(['Enable', 'Enable', 'Enable', 'Disable']);
-  const [uragomeChunyukoStyle, setUragomeChunyukoStyle] = useState<string[]>(['Enable', 'Disable']);
-  const [lockBoltLengthStyle, setLockBoltLengthStyle] = useState<string[]>(['Disable', 'Disable', 'Disable', 'Disable']);
-  const [downwardLockBoltEnable, setDownwardLockBoltEnable] = useState(false);
-  const [downwardLockBoltLengthStyle, setDownwardLockBoltLengthStyle] = useState<string>('Disable');
+  // Form validation and state management
+  const setEnable = useCallback((): void => {
+    const newData = { ...data };
+    let newHenkeiModeStyle = [...henkeiModeStyle];
+    let newUragomeChunyukoStyle = [...uragomeChunyukoStyle];
+    let newLockBoltLengthStyle = [...lockBoltLengthStyle];
+    let newDownwardLockBoltEnable = downwardLockBoltEnable;
+    let newHenkeiMode4Flag = henkeiMode4Flag;
+    let newTempFukukouMakiatsu = tempFukukouMakiatsu;
 
   // Form options
   const tunnelKeizyoList: FormOption[] = [
@@ -110,15 +110,7 @@ export default function InputPage(): JSX.Element {
     { id: 1, title: 'あり' }
   ];
 
-  // Form validation and state management
-  const setEnable = () => {
-    let newData = { ...data };
-    let newHenkeiModeStyle = ['Enable', 'Enable', 'Enable', 'Enable'];
-    let newUragomeChunyukoStyle = ['Enable', 'Disable'];
-    let newLockBoltLengthStyle = ['Disable', 'Disable', 'Disable', 'Disable'];
-    let newDownwardLockBoltEnable = false;
-    let newHenkeiMode4Flag = false;
-    let newTempFukukouMakiatsu = tempFukukouMakiatsu;
+  // Form options
 
 
     // 新幹線（在来工法）
@@ -190,6 +182,7 @@ export default function InputPage(): JSX.Element {
     }
 
     // Batch update all state
+    // Update all state at once
     setData(newData);
     setHenkeiModeStyle(newHenkeiModeStyle);
     setUragomeChunyukoStyle(newUragomeChunyukoStyle);
@@ -200,15 +193,16 @@ export default function InputPage(): JSX.Element {
       setTempFukukouMakiatsu(newTempFukukouMakiatsu);
       setFukukouMakiatsu(newTempFukukouMakiatsu);
     }
+  }, [data, tempFukukouMakiatsu, setData, setHenkeiModeStyle, setUragomeChunyukoStyle, setLockBoltLengthStyle, setDownwardLockBoltEnable, setHenkeiMode4Flag, setTempFukukouMakiatsu, setFukukouMakiatsu, setDownwardLockBoltLengthStyle]);
 
     // （下向き）ロックボルト長さ
     if (data.downwardLockBoltKou !== 0) {
-      setDownwardLockBoltLengthStyle('Enable');
+      setDownwardLockBoltLengthStyle(['Enable', 'Enable', 'Enable', 'Enable']);
       if (data.downwardLockBoltLength === 0) {
         setData((prev: InputData) => ({ ...prev, downwardLockBoltLength: 4 } as InputData));
       }
     } else {
-      setDownwardLockBoltLengthStyle('Disable');
+      setDownwardLockBoltLengthStyle(['Disable', 'Disable', 'Disable', 'Disable']);
       setData((prev: InputData) => ({ ...prev, downwardLockBoltLength: 0 } as InputData));
     }
 
@@ -298,9 +292,9 @@ export default function InputPage(): JSX.Element {
 
   useEffect(() => {
     setEnable();
-  }, [data.tunnelKeizyo, data.haimenKudo, data.henkeiMode, data.invert, 
-      data.lockBoltKou, data.lockBoltLength, data.downwardLockBoltKou]);
+  }, [setEnable]);
 
+  // Return the JSX for the input page
   return (
     <div>
       {/* 構造条件 */}
@@ -638,4 +632,6 @@ export default function InputPage(): JSX.Element {
       </div>
     </div>
   );
-}
+};
+
+export default InputPage;

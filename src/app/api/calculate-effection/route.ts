@@ -237,7 +237,7 @@ export async function POST(request: Request) {
     }
 
     // Initialize interpolation data structure
-    let crrentData: number[][] = [[-1, -1], [-1, -1]];
+    const currentData: number[][] = [[-1, -1], [-1, -1]];
     let counter = 0;
 
     // Find interpolation cases (indices 3-6)
@@ -246,32 +246,32 @@ export async function POST(request: Request) {
       if (!row?.case) continue;
 
       if (caseStrings[3] === row.case) {
-        crrentData[0][0] = getEffection(row, naikuHeniSokudo);
+        currentData[0][0] = getEffection(row, naikuHeniSokudo);
         counter++;
       }
       if (caseStrings[4] === row.case) {
-        crrentData[1][0] = getEffection(row, naikuHeniSokudo);
+        currentData[1][0] = getEffection(row, naikuHeniSokudo);
         counter++;
       }
       if (caseStrings[5] === row.case) {
-        crrentData[0][1] = getEffection(row, naikuHeniSokudo);
+        currentData[0][1] = getEffection(row, naikuHeniSokudo);
         counter++;
       }
       if (caseStrings[6] === row.case) {
-        crrentData[1][1] = getEffection(row, naikuHeniSokudo);
+        currentData[1][1] = getEffection(row, naikuHeniSokudo);
         counter++;
       }
     }
 
     console.log('Interpolation matches:', {
       counter,
-      data: crrentData
+      data: currentData
     });
 
     if (counter === 4) {
       // Calculate interpolated effection using Angular's exact formula
-      const temp1 = (crrentData[1][0] - crrentData[0][0]) * fukukoMakiatsu / 30 + 2 * crrentData[0][0] - crrentData[1][0];
-      const temp2 = (crrentData[1][1] - crrentData[0][1]) * fukukoMakiatsu / 30 + 2 * crrentData[0][1] - crrentData[1][1];
+      const temp1 = (currentData[1][0] - currentData[0][0]) * fukukoMakiatsu / 30 + 2 * currentData[0][0] - currentData[1][0];
+      const temp2 = (currentData[1][1] - currentData[0][1]) * fukukoMakiatsu / 30 + 2 * currentData[0][1] - currentData[1][1];
       const temp3 = (temp2 - temp1) * jiyamaKyodo / 6 + 4 * temp1 / 3 - temp2 / 3;
 
       // Round to one decimal place

@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useInputData } from '@/context/InputDataContext';
-import type { InputData, InputDataContextType } from '@/context/InputDataContext';
+import type { InputDataContextType } from '@/context/InputDataContext';
 import styles from './page.module.css';
 import type { ReactElement } from 'react';
+import Image from 'next/image';
 
 export default function OutputPage(): ReactElement {
   const { data } = useInputData() as InputDataContextType;
@@ -17,7 +18,7 @@ export default function OutputPage(): ReactElement {
   const [effection, setEffection] = useState<number>(0);
   const [alertString, setAlertString] = useState<string>('');
 
-  const getInputString1 = (): string => {
+  const getInputString1 = React.useCallback((): string => {
     let result = '';
     switch (data.tunnelKeizyo) {
       case 1:
@@ -35,9 +36,9 @@ export default function OutputPage(): ReactElement {
     result += 'cm・';
     result += data.invert === 0 ? 'インバートなし' : 'インバートあり';
     return result;
-  };
+  }, [data.tunnelKeizyo, data.fukukouMakiatsu, data.invert]);
 
-  const getInputString2 = (): string => {
+  const getInputString2 = React.useCallback((): string => {
     let result = data.haimenKudo === 0 ? '背面空洞なし' : '背面空洞あり';
     result += '・';
     switch (data.henkeiMode) {
@@ -61,9 +62,9 @@ export default function OutputPage(): ReactElement {
     result += data.naikuHeniSokudo.toString();
     result += 'mm / 年';
     return result;
-  };
+  }, [data.haimenKudo, data.henkeiMode, data.jiyamaKyodo, data.naikuHeniSokudo]);
 
-  const getInputString3 = (): string => {
+  const getInputString3 = React.useCallback((): string => {
     let result = '';
     if (data.uragomeChunyuko === 0) {
       result += '裏込注入なし';
@@ -95,7 +96,7 @@ export default function OutputPage(): ReactElement {
       result += 'm';
     }
     return result;
-  };
+  }, [data.uragomeChunyuko, data.lockBoltKou, data.lockBoltLength, data.uchimakiHokyo, data.downwardLockBoltKou, data.downwardLockBoltLength]);
 
   const getImgString = (): [string | undefined, string | undefined] => {
     function generateCaseStrings(flg: boolean = false): string[] {
@@ -166,14 +167,14 @@ export default function OutputPage(): ReactElement {
     ];
   };
 
-  const getDisplacement = (effectionValue: number): number => {
+  const getDisplacement = React.useCallback((effectionValue: number): number => {
     const a = data.naikuHeniSokudo;
     const b = effectionValue;
     const c = a * (1 - (b / 100));
     return Math.round(c * 10) / 10;
-  };
+  }, [data.naikuHeniSokudo]);
 
-  const getAlertString = (): string => {
+  const getAlertString = React.useCallback((): string => {
     let makiatsu = data.fukukouMakiatsu;
     let kyodo = data.jiyamaKyodo;
     if (data.tunnelKeizyo < 3) { // 単線, 複線
@@ -189,7 +190,7 @@ export default function OutputPage(): ReactElement {
     }
     kyodo = kyodo < 5 ? 2 : 8;
     return `※この画像は覆工巻厚を${makiatsu}、地山強度を${kyodo}とした場合のものです。`;
-  };
+  }, [data.tunnelKeizyo, data.fukukouMakiatsu, data.jiyamaKyodo]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -202,7 +203,7 @@ export default function OutputPage(): ReactElement {
     setImgString0(img0);
     setImgString1(img1);
     setAlertString(getAlertString());
-  }, [data]);
+  }, [data, getInputString1, getInputString2, getInputString3, getImgString, getAlertString]);
 
   // Handle effection calculation separately to avoid race conditions
   useEffect(() => {
@@ -241,7 +242,7 @@ export default function OutputPage(): ReactElement {
     return () => {
       isMounted = false;
     };
-  }, [data.tunnelKeizyo, data.fukukouMakiatsu, data.jiyamaKyodo, data.naikuHeniSokudo]);
+  }, [data, getDisplacement]);
 
   return (
     <div>
@@ -281,11 +282,11 @@ export default function OutputPage(): ReactElement {
           <div className={styles.images}>
             <div>
               <div>【対策工なし】</div>
-              {imgString0 && <img id="outputimage" src={imgString0} alt="対策工なし" />}
+              {imgString0 && <Image id="outputimage" src={imgString0} alt="対策工なし" width={400} height={300} priority />}
             </div>
             <div>
               <div>【対策工あり】</div>
-              {imgString1 && <img id="outputimage" src={imgString1} alt="対策工あり" />}
+              {imgString1 && <Image id="outputimage" src={imgString1} alt="対策工あり" width={400} height={300} priority />}
             </div>
           </div>
 
