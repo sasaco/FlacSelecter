@@ -1,156 +1,138 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import type { FocusEvent, ChangeEvent } from 'react';
 import { useInputData } from '@/context/InputDataContext';
 import type { InputData, InputDataContextType } from '@/context/InputDataContext';
-import Link from 'next/link';
 import styles from './page.module.css';
-import type { FocusEvent, ChangeEvent, FormEvent } from 'react';
-import type { JSX } from 'react';
-import type { Dispatch, SetStateAction } from 'react';
 
 interface FormOption {
   id: number;
   title: string;
 }
 
-export default function InputPage(): JSX.Element {
-  const { data, setData } = useInputData() as InputDataContextType;
-  
-  // Form state
-  const [tempFukukouMakiatsu, setTempFukukouMakiatsu] = useState(data.fukukouMakiatsu.toString());
-  const [tempJiyamaKyodo, setTempJiyamaKyodo] = useState(data.jiyamaKyodo.toString());
-  const [tempNaikuHeniSokudo, setTempNaikuHeniSokudo] = useState(data.naikuHeniSokudo.toString());
-  const [tempMonitoringData, setTempMonitoringData] = useState(data.MonitoringData);
+// Form options
+const tunnelKeizyoList: FormOption[] = [
+  { id: 1, title: '単線' },
+  { id: 2, title: '複線' },
+  { id: 3, title: '新幹線（在来工法）' },
+];
 
-  // Initialize form state on mount and when specific data fields change
-  useEffect(() => {
-    const {
-      tunnelKeizyo,
-      haimenKudo,
-      henkeiMode,
-      fukukouMakiatsu,
-      lockBoltKou,
-      uragomeChunyuko
-    } = data;
-    
-  }, [
-    data.tunnelKeizyo,
-    data.haimenKudo,
-    data.henkeiMode,
-    data.fukukouMakiatsu,
-    data.lockBoltKou,
-    data.uragomeChunyuko
-  ]);
-  
-  // UI state
-  const [henkeiMode4Flag, setHenkeiMode4Flag] = useState(false);
-  const [henkeiModeStyle, setHenkeiModeStyle] = useState<string[]>(['Enable', 'Enable', 'Enable', 'Disable']);
+const invertList: FormOption[] = [
+  { id: 0, title: 'なし' },
+  { id: 1, title: 'あり' }
+];
+
+const haimenKudoList: FormOption[] = [
+  { id: 0, title: 'なし' },
+  { id: 1, title: 'あり' }
+];
+
+const henkeiModeList: FormOption[] = [
+  { id: 1, title: '側壁全体押出し' },
+  { id: 2, title: '側壁上部前傾' },
+  { id: 3, title: '脚部押出し' },
+  { id: 4, title: '盤ぶくれ' }
+];
+
+const uragomeChunyukoList: FormOption[] = [
+  { id: 0, title: 'なし' },
+  { id: 1, title: 'あり' }
+];
+
+const lockBoltKouList: FormOption[] = [
+  { id: 0, title: 'なし' },
+  { id: 4, title: '4本' },
+  { id: 8, title: '8本' },
+  { id: 12, title: '12本' },
+];
+
+const lockBoltLengthList: FormOption[] = [
+  { id: 3, title: '3m' },
+  { id: 6, title: '6m' },
+  { id: 4, title: '4m' },
+  { id: 8, title: '8m' },
+];
+
+const downwardLockBoltKouList: FormOption[] = [
+  { id: 0, title: 'なし' },
+  { id: 4, title: '4本' },
+  { id: 6, title: '6本' }
+];
+
+const downwardLockBoltLengthList: FormOption[] = [
+  { id: 4, title: '4m' },
+  { id: 8, title: '8m' }
+];
+
+const uchimakiHokyoList: FormOption[] = [
+  { id: 0, title: 'なし' },
+  { id: 1, title: 'あり' }
+];
+
+const InputPage: React.FC = () => {
+  // Initialize context
+  const { data, setData } = useInputData() as InputDataContextType;
+
+  // Initialize state variables
+  const [henkeiModeStyle, setHenkeiModeStyle] = useState<string[]>(['Enable', 'Enable', 'Enable', 'Enable']);
   const [uragomeChunyukoStyle, setUragomeChunyukoStyle] = useState<string[]>(['Enable', 'Disable']);
   const [lockBoltLengthStyle, setLockBoltLengthStyle] = useState<string[]>(['Disable', 'Disable', 'Disable', 'Disable']);
-  const [downwardLockBoltEnable, setDownwardLockBoltEnable] = useState(false);
-  const [downwardLockBoltLengthStyle, setDownwardLockBoltLengthStyle] = useState<string>('Disable');
-
-  // Form options
-  const tunnelKeizyoList: FormOption[] = [
-    { id: 1, title: '単線' },
-    { id: 2, title: '複線' },
-    { id: 3, title: '新幹線（在来工法）' },
-  ];
-
-  const invertList: FormOption[] = [
-    { id: 0, title: 'なし' },
-    { id: 1, title: 'あり' }
-  ];
-
-  const haimenKudoList: FormOption[] = [
-    { id: 0, title: 'なし' },
-    { id: 1, title: 'あり' }
-  ];
-
-  const henkeiModeList: FormOption[] = [
-    { id: 1, title: '側壁全体押出し' },
-    { id: 2, title: '側壁上部前傾' },
-    { id: 3, title: '脚部押出し' },
-    { id: 4, title: '盤ぶくれ' }
-  ];
-
-  const uragomeChunyukoList: FormOption[] = [
-    { id: 0, title: 'なし' },
-    { id: 1, title: 'あり' }
-  ];
-
-  const lockBoltKouList: FormOption[] = [
-    { id: 0, title: 'なし' },
-    { id: 4, title: '4本' },
-    { id: 8, title: '8本' },
-    { id: 12, title: '12本' },
-  ];
-
-  const lockBoltLengthList: FormOption[] = [
-    { id: 3, title: '3m' },
-    { id: 6, title: '6m' },
-    { id: 4, title: '4m' },
-    { id: 8, title: '8m' },
-  ];
-
-  const downwardLockBoltKouList: FormOption[] = [
-    { id: 0, title: 'なし' },
-    { id: 4, title: '4本' },
-    { id: 6, title: '6本' }
-  ];
-
-  const downwardLockBoltLengthList: FormOption[] = [
-    { id: 4, title: '4m' },
-    { id: 8, title: '8m' }
-  ];
-
-  const uchimakiHokyoList: FormOption[] = [
-    { id: 0, title: 'なし' },
-    { id: 1, title: 'あり' }
-  ];
+  const [downwardLockBoltLengthStyle, setDownwardLockBoltLengthStyle] = useState<string[]>(['Disable', 'Disable', 'Disable', 'Disable']);
+  const [downwardLockBoltEnable, setDownwardLockBoltEnable] = useState<boolean>(false);
+  const [henkeiMode4Flag, setHenkeiMode4Flag] = useState<boolean>(false);
+  const [tempFukukouMakiatsu, setTempFukukouMakiatsu] = useState<string>(data.fukukouMakiatsu.toString());
+  const [tempJiyamaKyodo, setTempJiyamaKyodo] = useState<string>(data.jiyamaKyodo.toString());
+  const [tempNaikuHeniSokudo, setTempNaikuHeniSokudo] = useState<string>(data.naikuHeniSokudo.toString());
+  const [tempMonitoringData, setTempMonitoringData] = useState<string>(data.MonitoringData || '');
 
   // Form validation and state management
-  const setEnable = () => {
-    let newData = { ...data };
-    let newHenkeiModeStyle = ['Enable', 'Enable', 'Enable', 'Enable'];
-    let newUragomeChunyukoStyle = ['Enable', 'Disable'];
-    let newLockBoltLengthStyle = ['Disable', 'Disable', 'Disable', 'Disable'];
-    let newDownwardLockBoltEnable = false;
-    let newHenkeiMode4Flag = false;
-    let newTempFukukouMakiatsu = tempFukukouMakiatsu;
+  const setEnable = useCallback((): void => {
+    // Create new state objects with proper types
+    const newData: InputData = { ...data };
+    const newStyles = {
+      henkeiMode: [...henkeiModeStyle],
+      uragomeChunyuko: [...uragomeChunyukoStyle],
+      lockBoltLength: [...lockBoltLengthStyle],
+      downwardLockBoltLength: [...downwardLockBoltLengthStyle]
+    };
+    const newFlags = {
+      downwardLockBoltEnable,
+      henkeiMode4: henkeiMode4Flag
+    };
+    const newTemp = {
+      fukukouMakiatsu: tempFukukouMakiatsu
+    };
 
-
-    // 新幹線（在来工法）
+    // Update state based on conditions
     if (data.tunnelKeizyo === 3) {
       if (data.haimenKudo === 1) {
         if (data.henkeiMode === 4) {
           newData.henkeiMode = 1;
         }
-        newHenkeiModeStyle[3] = 'Disable';
+        newStyles.henkeiMode[3] = 'Disable';
       }
       if (data.fukukouMakiatsu < 50) {
-        newTempFukukouMakiatsu = "50";
+        newTemp.fukukouMakiatsu = "50";
         newData.fukukouMakiatsu = 50;
       }
     } else {
-      // 新幹線（在来工法）ではない
-      newHenkeiModeStyle = ['Enable', 'Enable', 'Enable', 'Disable'];
+      newStyles.henkeiMode = ['Enable', 'Enable', 'Enable', 'Disable'];
       if (data.henkeiMode === 4) {
         newData.henkeiMode = 1;
       }
       newData.downwardLockBoltKou = 0;
       newData.downwardLockBoltLength = 0;
       if (data.fukukouMakiatsu > 60) {
-        newTempFukukouMakiatsu = "60";
+        newTemp.fukukouMakiatsu = "60";
         newData.fukukouMakiatsu = 60;
       }
     }
 
-    // 盤ぶくれモード
+    // Handle henkeiMode4Flag and related states
     if (data.henkeiMode === 4) {
-      newHenkeiMode4Flag = true;
-      newDownwardLockBoltEnable = true;
+      newFlags.henkeiMode4 = true;
+      newFlags.downwardLockBoltEnable = true;
       newData.lockBoltKou = 0;
       newData.lockBoltLength = 0;
       newData.uchimakiHokyo = 0;
@@ -159,29 +141,29 @@ export default function InputPage(): JSX.Element {
       newData.downwardLockBoltLength = 0;
     }
 
-    // 背面空洞の有無 と 裏込注入工
+    // Update states based on haimenKudo
     if (data.haimenKudo === 0) {
-      newUragomeChunyukoStyle = ['Enable', 'Disable'];
+      newStyles.uragomeChunyuko = ['Enable', 'Disable'];
       newData.uragomeChunyuko = 0;
     } else {
-      newUragomeChunyukoStyle = ['Disable', 'Enable'];
+      newStyles.uragomeChunyuko = ['Disable', 'Enable'];
       newData.uragomeChunyuko = 1;
     }
 
-    // ロックボルト長さ
+    // Update lockBoltLength based on conditions
     if (data.lockBoltKou === 0) {
       newData.lockBoltLength = 0;
     } else {
       switch (data.tunnelKeizyo) {
         case 1: // 単線 3, 6m
-          newLockBoltLengthStyle = ['Enable', 'Enable', 'Disable', 'Disable'];
+          newStyles.lockBoltLength = ['Enable', 'Enable', 'Disable', 'Disable'];
           if (data.lockBoltLength !== 3 && data.lockBoltLength !== 6) {
             newData.lockBoltLength = 3;
           }
           break;
         case 2: // 複線 4, 8m
         case 3: // 新幹線（在来工法）4, 8m
-          newLockBoltLengthStyle = ['Disable', 'Disable', 'Enable', 'Enable'];
+          newStyles.lockBoltLength = ['Disable', 'Disable', 'Enable', 'Enable'];
           if (data.lockBoltLength !== 4 && data.lockBoltLength !== 8) {
             newData.lockBoltLength = 4;
           }
@@ -189,120 +171,131 @@ export default function InputPage(): JSX.Element {
       }
     }
 
-    // Batch update all state
-    setData(newData);
-    setHenkeiModeStyle(newHenkeiModeStyle);
-    setUragomeChunyukoStyle(newUragomeChunyukoStyle);
-    setLockBoltLengthStyle(newLockBoltLengthStyle);
-    setDownwardLockBoltEnable(newDownwardLockBoltEnable);
-    setHenkeiMode4Flag(newHenkeiMode4Flag);
-    if (newTempFukukouMakiatsu !== tempFukukouMakiatsu) {
-      setTempFukukouMakiatsu(newTempFukukouMakiatsu);
-      setFukukouMakiatsu(newTempFukukouMakiatsu);
-    }
-
-    // （下向き）ロックボルト長さ
+    // Update downwardLockBoltLength states
     if (data.downwardLockBoltKou !== 0) {
-      setDownwardLockBoltLengthStyle('Enable');
+      newStyles.downwardLockBoltLength = ['Enable', 'Enable', 'Enable', 'Enable'];
       if (data.downwardLockBoltLength === 0) {
-        setData((prev: InputData) => ({ ...prev, downwardLockBoltLength: 4 } as InputData));
+        newData.downwardLockBoltLength = 4;
       }
     } else {
-      setDownwardLockBoltLengthStyle('Disable');
-      setData((prev: InputData) => ({ ...prev, downwardLockBoltLength: 0 } as InputData));
+      newStyles.downwardLockBoltLength = ['Disable', 'Disable', 'Disable', 'Disable'];
+      newData.downwardLockBoltLength = 0;
     }
 
-    // インバートありの場合は「脚部押出し」は選べないように
+    // Handle invert conditions
     if (data.invert === 1) {
-      setHenkeiModeStyle(prev => {
-        const newStyle = [...prev];
-        newStyle[2] = 'Disable';
-        return newStyle;
-      });
+      newStyles.henkeiMode[2] = 'Disable';
       if (data.henkeiMode === 3) {
-        setData((prev: InputData) => ({ ...prev, henkeiMode: 1 } as InputData));
+        newData.henkeiMode = 1;
       }
-    } else {
-      setHenkeiModeStyle(prev => {
-        const newStyle = [...prev];
-        newStyle[2] = 'Enable';
-        return newStyle;
-      });
     }
-  };
 
-  const setFukukouMakiatsu = (value: string): void => {
-    const numValue = Number(value);
-    const min = data.tunnelKeizyo !== 3 ? 30 : 50;
-    const max = data.tunnelKeizyo !== 3 ? 60 : 70;
+    // Update all states
+    setHenkeiModeStyle(newStyles.henkeiMode);
+    setUragomeChunyukoStyle(newStyles.uragomeChunyuko);
+    setLockBoltLengthStyle(newStyles.lockBoltLength);
+    setDownwardLockBoltLengthStyle(newStyles.downwardLockBoltLength);
+    setDownwardLockBoltEnable(newFlags.downwardLockBoltEnable);
+    setHenkeiMode4Flag(newFlags.henkeiMode4);
+    setTempFukukouMakiatsu(newTemp.fukukouMakiatsu);
+    setData(newData);
+  }, [
+    data,
+    setData,
+    henkeiModeStyle,
+    uragomeChunyukoStyle,
+    lockBoltLengthStyle,
+    downwardLockBoltLengthStyle,
+    downwardLockBoltEnable,
+    henkeiMode4Flag,
+    tempFukukouMakiatsu
+  ]);
 
-    if (!Number.isNaN(numValue)) {
-      if (numValue < min) {
-        alert(`${min}以上の数値を入力してください`);
-        setData((prev: InputData) => ({ ...prev, fukukouMakiatsu: min }));
-      } else if (max < numValue) {
-        alert(`${max}以下の数値を入力してください`);
-        setData((prev: InputData) => ({ ...prev, fukukouMakiatsu: max }));
+  const setFukukouMakiatsu = useCallback((value: string): void => {
+    const num = Number(value);
+    if (!isNaN(num)) {
+      if (data.tunnelKeizyo === 3) {
+        if (num < 50) {
+          setData({ ...data, fukukouMakiatsu: 50 });
+          setTempFukukouMakiatsu("50");
+        } else {
+          setData({ ...data, fukukouMakiatsu: num });
+          setTempFukukouMakiatsu(value);
+        }
       } else {
-        setData((prev: InputData) => ({ ...prev, fukukouMakiatsu: numValue }));
+        if (num > 60) {
+          setData({ ...data, fukukouMakiatsu: 60 });
+          setTempFukukouMakiatsu("60");
+        } else {
+          setData({ ...data, fukukouMakiatsu: num });
+          setTempFukukouMakiatsu(value);
+        }
       }
     }
-    setTempFukukouMakiatsu(data.fukukouMakiatsu.toString());
-  };
+  }, [data, setData]);
 
-  const setJiyamaKyodo = (value: string): void => {
-    const numValue = Number(value);
-    if (!Number.isNaN(numValue)) {
-      if (numValue < 2) {
-        alert("2以上の数値を入力してください");
-        setData((prev: InputData) => ({ ...prev, jiyamaKyodo: 2 }));
-      } else if (8 < numValue) {
-        alert("8以下の数値を入力してください");
-        setData((prev: InputData) => ({ ...prev, jiyamaKyodo: 8 }));
+  const setJiyamaKyodo = useCallback((value: string): void => {
+    const num = Number(value);
+    if (!isNaN(num)) {
+      if (num < 2) {
+        setData({ ...data, jiyamaKyodo: 2 });
+        setTempJiyamaKyodo("2");
+      } else if (num > 8) {
+        setData({ ...data, jiyamaKyodo: 8 });
+        setTempJiyamaKyodo("8");
       } else {
-        setData((prev: InputData) => ({ ...prev, jiyamaKyodo: numValue }));
+        setData({ ...data, jiyamaKyodo: num });
+        setTempJiyamaKyodo(value);
       }
     }
-    setTempJiyamaKyodo(data.jiyamaKyodo.toString());
-  };
+  }, [data, setData]);
 
-  const setNaikuHeniSokudo = (value: string): void => {
-    const numValue = Number(value);
-    if (!Number.isNaN(numValue)) {
-      setData((prev: InputData) => ({ ...prev, naikuHeniSokudo: numValue }));
+  const setNaikuHeniSokudo = useCallback((value: string): void => {
+    const num = Number(value);
+    if (!isNaN(num)) {
+      setData({ ...data, naikuHeniSokudo: num });
+      setTempNaikuHeniSokudo(value);
     }
-    setTempNaikuHeniSokudo(data.naikuHeniSokudo.toString());
-  };
+  }, [data, setData]);
 
-  const getMonitoringData = async (): Promise<void> => {
+  const getMonitoringData = useCallback(async () => {
     try {
-      const response = await fetch('http://iot2put.sakura.ne.jp/vel_now.txt');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const text = await response.text();
-      setTempMonitoringData(text);
-      
-      const monitoringData = text.split(/\r\n|\r|\n/);
-      const index = monitoringData.length - 1;
-      const getNaikuHeniRow = monitoringData[index];
-      const tmp = getNaikuHeniRow.split('：');
-      const getNaikuHeniSokudo = tmp[1];
-      
-      setTempNaikuHeniSokudo(getNaikuHeniSokudo);
-      setNaikuHeniSokudo(getNaikuHeniSokudo);
-    } catch (error) {
-      setTempMonitoringData((error as Error).message);
-    }
-  };
+      const response = await fetch('/api/calculate-effection', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      setTempMonitoringData(result.MonitoringData);
+      setData({ ...data, MonitoringData: result.MonitoringData });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }, [data, setData]);
+
+  // Initialize form state on mount and when specific data fields change
   useEffect(() => {
     setEnable();
-  }, [data.tunnelKeizyo, data.haimenKudo, data.henkeiMode, data.invert, 
-      data.lockBoltKou, data.lockBoltLength, data.downwardLockBoltKou]);
+  }, [
+    data.tunnelKeizyo,
+    data.haimenKudo,
+    data.henkeiMode,
+    data.fukukouMakiatsu,
+    data.lockBoltKou,
+    data.uragomeChunyuko,
+    setEnable
+  ]);
 
+  // Return the JSX for the input page
   return (
-    <div>
+    <div className={styles.mainContainer}>
       {/* 構造条件 */}
       <div className={styles.container}>
         <div className={styles.sectionTitle}>
@@ -507,59 +500,54 @@ export default function InputPage(): JSX.Element {
 
           <fieldset>
             <legend>ロックボルト工</legend>
-            {!henkeiMode4Flag ? (
-              <div className={styles.lockbolt}>
-                <div>
-                  {lockBoltKouList.map((x, i) => (
-                    <div key={x.id}>
-                      <label>
-                        <input
-                          type="radio"
-                          name="lockBoltKou"
-                          id={`lockBoltKou${i}`}
-                          value={x.id}
-                          checked={data.lockBoltKou === x.id}
-                          onChange={() => {
-                            setData({ ...data, lockBoltKou: x.id });
-                            setEnable();
-                          }}
-                        />
-                        {x.title}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-                <div className={styles['margin-left']}>
-                  {lockBoltLengthList.map((x, i) => (
-                    <div key={x.id} className={lockBoltLengthStyle[i] === 'Enable' ? styles.enabled : styles.disabled}>
-                      <label>
-                        <input
-                          type="radio"
-                          name="lockBoltLength"
-                          id={`lockBoltLength${i}`}
-                          value={x.id}
-                          checked={data.lockBoltLength === x.id}
-                          disabled={lockBoltLengthStyle[i] !== 'Enable'}
-                          onChange={() => {
-                            setData({ ...data, lockBoltLength: x.id });
-                            setEnable();
-                          }}
-                        />
-                        {x.title}
-                      </label>
-                    </div>
-                  ))}
-                </div>
+            <div className={styles.lockBoltContainer}>
+              <div>
+                {lockBoltKouList.map((x, i) => (
+                  <div key={x.id}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="lockBoltKou"
+                        id={`lockBoltKou${i}`}
+                        value={x.id}
+                        checked={data.lockBoltKou === x.id}
+                        onChange={() => {
+                          setData({ ...data, lockBoltKou: x.id });
+                          setEnable();
+                        }}
+                      />
+                      {x.title}
+                    </label>
+                  </div>
+                ))}
               </div>
-            ) : (
-              <p>選択できません</p>
-            )}
+              <div className={styles['margin-left']}>
+                {lockBoltLengthList.map((x, i) => (
+                  <div key={x.id}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="lockBoltLength"
+                        id={`lockBoltLength${i}`}
+                        value={x.id}
+                        checked={data.lockBoltLength === x.id}
+                        disabled={lockBoltLengthStyle[i] !== 'Enable'}
+                        onChange={() => {
+                          setData({ ...data, lockBoltLength: x.id });
+                        }}
+                      />
+                      {x.title}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
           </fieldset>
 
           <fieldset>
-            <legend>ロックボルト工（下向き）</legend>
+            <legend>下向きロックボルト工</legend>
             {downwardLockBoltEnable ? (
-              <div className={styles.lockbolt}>
+              <div className={styles.lockBoltContainer}>
                 <div>
                   {downwardLockBoltKouList.map((x, i) => (
                     <div key={x.id}>
@@ -580,7 +568,7 @@ export default function InputPage(): JSX.Element {
                     </div>
                   ))}
                 </div>
-                <div className={`${styles['margin-left']} ${downwardLockBoltLengthStyle === 'Enable' ? styles.enabled : styles.disabled}`}>
+                <div className={styles['margin-left']}>
                   {downwardLockBoltLengthList.map((x, i) => (
                     <div key={x.id}>
                       <label>
@@ -590,7 +578,7 @@ export default function InputPage(): JSX.Element {
                           id={`downwardLockBoltLength${i}`}
                           value={x.id}
                           checked={data.downwardLockBoltLength === x.id}
-                          disabled={downwardLockBoltLengthStyle !== 'Enable'}
+                          disabled={downwardLockBoltLengthStyle[i] !== 'Enable'}
                           onChange={() => {
                             setData({ ...data, downwardLockBoltLength: x.id });
                           }}
@@ -605,7 +593,6 @@ export default function InputPage(): JSX.Element {
               <p>選択できません</p>
             )}
           </fieldset>
-
 
           <fieldset>
             <legend>内巻補強</legend>
@@ -638,4 +625,6 @@ export default function InputPage(): JSX.Element {
       </div>
     </div>
   );
-}
+};
+
+export default InputPage;

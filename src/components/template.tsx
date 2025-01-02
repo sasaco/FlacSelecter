@@ -1,13 +1,14 @@
 'use client';
 
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Template({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const pathname = usePathname();
   return (   
@@ -15,7 +16,7 @@ export default function Template({
       <div className="header">
         <div className="container">
           <div className="liner">
-            <img src="/images/logo.png" alt="Logo" />
+            <Image src="/images/logo.png" alt="Logo" width={200} height={50} />
             <div className="title-and-version">
               <h1>変状対策工設計ツール</h1>
               <div>Ver.2.1.1</div>
