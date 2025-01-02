@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import type { FocusEvent, ChangeEvent, JSX } from 'react';
+import type { FocusEvent, ChangeEvent } from 'react';
 import { useInputData } from '@/context/InputDataContext';
 import type { InputData, InputDataContextType } from '@/context/InputDataContext';
 import styles from './page.module.css';
