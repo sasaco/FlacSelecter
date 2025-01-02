@@ -237,7 +237,7 @@ export async function POST(request: Request) {
     }
 
     // Initialize interpolation data structure
-    const currentData: number[][] = [[-1, -1], [-1, -1]];
+    const interpolationData: number[][] = [[-1, -1], [-1, -1]];
     let counter = 0;
 
     // Find interpolation cases (indices 3-6)
@@ -246,32 +246,32 @@ export async function POST(request: Request) {
       if (!row?.case) continue;
 
       if (caseStrings[3] === row.case) {
-        currentData[0][0] = getEffection(row, naikuHeniSokudo);
+        interpolationData[0][0] = getEffection(row, naikuHeniSokudo);
         counter++;
       }
       if (caseStrings[4] === row.case) {
-        currentData[1][0] = getEffection(row, naikuHeniSokudo);
+        interpolationData[1][0] = getEffection(row, naikuHeniSokudo);
         counter++;
       }
       if (caseStrings[5] === row.case) {
-        currentData[0][1] = getEffection(row, naikuHeniSokudo);
+        interpolationData[0][1] = getEffection(row, naikuHeniSokudo);
         counter++;
       }
       if (caseStrings[6] === row.case) {
-        currentData[1][1] = getEffection(row, naikuHeniSokudo);
+        interpolationData[1][1] = getEffection(row, naikuHeniSokudo);
         counter++;
       }
     }
 
     console.log('Interpolation matches:', {
       counter,
-      data: currentData
+      data: interpolationData
     });
 
     if (counter === 4) {
       // Calculate interpolated effection using Angular's exact formula
-      const temp1 = (currentData[1][0] - currentData[0][0]) * fukukoMakiatsu / 30 + 2 * currentData[0][0] - currentData[1][0];
-      const temp2 = (currentData[1][1] - currentData[0][1]) * fukukoMakiatsu / 30 + 2 * currentData[0][1] - currentData[1][1];
+      const temp1 = (interpolationData[1][0] - interpolationData[0][0]) * fukukoMakiatsu / 30 + 2 * interpolationData[0][0] - interpolationData[1][0];
+      const temp2 = (interpolationData[1][1] - interpolationData[0][1]) * fukukoMakiatsu / 30 + 2 * interpolationData[0][1] - interpolationData[1][1];
       const temp3 = (temp2 - temp1) * jiyamaKyodo / 6 + 4 * temp1 / 3 - temp2 / 3;
 
       // Round to one decimal place

@@ -53,7 +53,7 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
   const initialized = React.useRef(false);
   const loadingRef = React.useRef(false);
 
-  const parseCSVData = React.useCallback((csvText: string) => {
+  const parseCSVData = React.useCallback((csvText: string): void => {
     if (!csvText || typeof csvText !== 'string') {
       console.error('Invalid CSV text provided to parser');
       return;
@@ -73,7 +73,7 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
         const columns = line.split(',');
         if (columns.length < 7) continue;
         
-        let list = [];
+        const list: string[] = [];
         // First two columns
         list.push(columns[0], columns[1]);
         
@@ -103,14 +103,14 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
   }, []); // No dependencies needed since we're using refs
 
   useEffect(() => {
-    if (initialized.current || loadingRef.current) return;
-    initialized.current = true;
-    loadingRef.current = true;
-
-    const controller = new AbortController();
     let isMounted = true;
+    const controller = new AbortController();
+
+    const loadData = async () => {
+      if (initialized.current || loadingRef.current) return;
+      initialized.current = true;
+      loadingRef.current = true;
     
-    const loadCSV = async () => {
       try {
         const response = await fetch('/data.csv', {
           signal: controller.signal
@@ -143,13 +143,13 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    loadCSV();
+    void loadData();
     
     return () => {
       controller.abort();
       isMounted = false;
     };
-  }, []); // No dependencies needed since we're using refs
+  }, [parseCSVData, setDataLoaded]); // Add all required dependencies
 
   const getTargetData = (flg: boolean): number[] => {
     let makiatsu: number = data.fukukouMakiatsu;
@@ -334,7 +334,7 @@ function InputDataProvider({ children }: { children: React.ReactNode }) {
     resetData,
     getCaseStrings,
     getEffectionNum
-  }), [data]);
+  }), [data, getCaseStrings, getEffectionNum]);
 
   return (
     <InputDataContext.Provider value={contextValue}>
